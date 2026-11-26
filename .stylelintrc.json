@@ -1,0 +1,23 @@
+{
+  "ignoreFiles": ["src/styles/tokens.css", "dist/**"],
+  "overrides": [
+    {
+      "files": ["**/*.astro"],
+      "customSyntax": "postcss-html"
+    }
+  ],
+  "rules": {
+    "declaration-property-value-allowed-list": {
+      "/^font-size$/i": ["/^var\\(--font-size-(xs|sm|base|lg|xl|2xl|3xl|4xl|display)\\)$/", "inherit"],
+      "/^font-weight$/i": ["/^var\\(--font-weight-(regular|medium|semibold|bold|black)\\)$/", "inherit"],
+      "/^(margin|padding|gap|row-gap|column-gap)/i": [
+        "/^((var\\(--space-(2xs|xs|sm|md|lg|xl|2xl|3xl|4xl|gutter|section)\\)|0|auto)(\\s+|$))+$/"
+      ]
+    },
+    "declaration-property-value-disallowed-list": {
+      "/^(?!--)/": ["/#[0-9a-f]{3,8}\\b/i", "/\\b(rgba?|hsla?|hwb|lab|lch|oklab|oklch|color|color-mix)\\(/i"]
+    },
+    "color-named": ["never", { "ignoreProperties": ["/^--/"] }],
+    "property-disallowed-list": ["/^font$/i"]
+  }
+}

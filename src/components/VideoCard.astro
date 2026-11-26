@@ -1,0 +1,75 @@
+---
+import LiteYouTube from './LiteYouTube.astro';
+import { formatDate, formatViews } from '../lib/format';
+import type { ChannelVideo } from '../lib/youtube-feed';
+
+interface Props {
+  video: Pick<ChannelVideo, 'id' | 'title' | 'aspect'> & Partial<Pick<ChannelVideo, 'published' | 'views' | 'isShort'>>;
+  badge?: string;
+  sizes?: string;
+  headingLevel?: 'h3' | 'h4';
+}
+
+const { video, sizes, headingLevel: Heading = 'h3' } = Astro.props;
+const badge = Astro.props.badge ?? (video.isShort ? 'Short' : undefined);
+const views = formatViews(video.views ?? null);
+---
+
+<article class="vcard">
+  <LiteYouTube id={video.id} title={video.title} aspect={video.aspect} sizes={sizes} />
+  <div class="vcard__body">
+    <Heading class="vcard__title">{video.title}</Heading>
+    {
+      (video.published || views || badge) && (
+        <p class="vcard__meta">
+          {badge && <span class="vcard__badge">{badge}</span>}
+          {video.published && <time datetime={video.published}>{formatDate(video.published)}</time>}
+          {views && <span>{views}</span>}
+        </p>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  .vcard {
+    display: grid;
+    gap: var(--space-sm);
+    align-content: start;
+  }
+
+  .vcard__body {
+    display: grid;
+    gap: var(--space-2xs);
+  }
+
+  .vcard__title {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+  }
+
+  .vcard__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2xs) var(--space-sm);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    text-transform: uppercase;
+  }
+
+  .vcard__badge {
+    padding: 0 var(--space-xs);
+    border-radius: var(--radius-sm);
+    background: var(--brand-red);
+    color: var(--text-on-brand);
+    font-weight: var(--font-weight-bold);
+  }
+</style>

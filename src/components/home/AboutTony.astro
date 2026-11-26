@@ -1,0 +1,244 @@
+---
+import { Image } from 'astro:assets';
+import portrait from '../../assets/brand/tony-traje.jpg';
+import Icon from '../Icon.astro';
+import SectionHeading from '../SectionHeading.astro';
+import { STATS } from '../../data/site';
+
+const PILLARS = [
+  { icon: 'broadcast', title: 'Shows en vivo', text: 'Noches de música, artistas invitados, karaoke y la gente participando en vivo.' },
+  { icon: 'chat', title: 'Entrevistas', text: 'Conversaciones sin filtro con figuras de la bachata y el merengue.' },
+  { icon: 'music', title: 'Promoción musical', text: 'Estrenos y temas de artistas dominicanos, nuevos y consagrados.' },
+  { icon: 'disc', title: 'Mezclas y Shorts', text: 'Mega mezclas del DJ y clips cortos sobre la música y la actualidad dominicana.' },
+] as const;
+---
+
+<section class="section about" id="sobre-tony" aria-labelledby="sobre-title">
+  <div class="container about__grid">
+    <figure class="about__figure">
+      <div class="about__frame">
+        <Image
+          src={portrait}
+          alt="Tony González de traje oscuro y corbata, sosteniendo el logo de Tony Sin Pauta"
+          widths={[320, 520]}
+          sizes="(min-width: 64rem) 26rem, 80vw"
+        />
+      </div>
+      <figcaption class="about__caption">
+        <span class="kicker">Host · Productor · DJ</span>
+        <strong>Tony González</strong>
+      </figcaption>
+    </figure>
+
+    <div class="about__copy">
+      <SectionHeading id="sobre-title" number="03" kicker="Sobre Tony" title="Sin guion. Sin filtro. Sin pauta." />
+      <div class="about__text">
+        <p>
+          <strong>Tony Sin Pauta</strong> es el show de Tony González. Desde 2022 lleva a YouTube noches de música, entrevistas y
+          buena conversación para la comunidad dominicana y latina de Nueva York, Nueva Jersey y Connecticut, y para todo el que lo
+          sigue desde República Dominicana.
+        </p>
+        <p>
+          El nombre lo dice todo: aquí no hay libreto. Se habla claro, se pone buena música y se le abre espacio al talento, desde
+          artistas consagrados hasta los que vienen subiendo.
+        </p>
+      </div>
+
+      <ul class="about__pillars" role="list">
+        {
+          PILLARS.map((pillar) => (
+            <li class="pillar">
+              <span class="pillar__icon">
+                <Icon name={pillar.icon} />
+              </span>
+              <h3 class="pillar__title">{pillar.title}</h3>
+              <p class="pillar__text">{pillar.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+
+      <dl class="about__stats">
+        {
+          STATS.map((stat) => (
+            <div>
+              <dt>{stat.label}</dt>
+              <dd>{stat.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about__grid {
+    display: grid;
+    gap: var(--space-2xl);
+  }
+
+  .about__figure {
+    position: relative;
+    display: grid;
+    gap: var(--space-md);
+    justify-self: center;
+    width: min(100%, 24rem);
+  }
+
+  .about__frame {
+    position: relative;
+    isolation: isolate;
+    padding: var(--space-md);
+  }
+
+  .about__frame::before {
+    content: '';
+    position: absolute;
+    inset: 0 var(--space-xl) var(--space-xl) 0;
+    z-index: -1;
+    border-radius: var(--radius-lg);
+    background: var(--pattern-foam);
+    background-size: 2.5rem 2.5rem;
+  }
+
+  .about__frame img {
+    position: relative;
+    width: 100%;
+    border-radius: var(--radius-md);
+    border: var(--border-width) solid var(--border-strong);
+    box-shadow: var(--shadow-monitor);
+    transform: translate(var(--space-md), var(--space-md));
+  }
+
+  .about__caption {
+    display: grid;
+    gap: var(--space-2xs);
+    margin-top: var(--space-md);
+    padding-left: var(--space-md);
+  }
+
+  .about__caption strong {
+    font-family: var(--font-display);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: var(--tracking-display);
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .about__copy {
+    display: grid;
+    align-content: start;
+  }
+
+  .about__copy :global(.sh) {
+    margin-bottom: var(--space-lg);
+  }
+
+  .about__text {
+    display: grid;
+    gap: var(--space-md);
+    max-width: 40rem;
+    font-size: var(--font-size-lg);
+    color: var(--text-secondary);
+  }
+
+  .about__text strong {
+    color: var(--text-primary);
+  }
+
+  .about__pillars {
+    display: grid;
+    gap: var(--space-md);
+    margin-top: var(--space-xl);
+  }
+
+  .pillar {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-2xs) var(--space-md);
+    padding: var(--space-md);
+    border: var(--border-width) solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+  }
+
+  .pillar__icon {
+    grid-row: span 2;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: var(--radius-md);
+    background: var(--brand-gold-soft);
+    color: var(--brand-gold);
+  }
+
+  .pillar__icon :global(svg) {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .pillar__title {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .pillar__text {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+  }
+
+  .about__stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-md);
+    margin: var(--space-xl) 0 0;
+  }
+
+  .about__stats div {
+    display: flex;
+    flex-direction: column-reverse;
+    padding: var(--space-sm) var(--space-md);
+    border-top: 2px solid var(--brand-red);
+    background: var(--bg-surface);
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  }
+
+  .about__stats dd {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--font-size-2xl);
+    letter-spacing: var(--tracking-display);
+    line-height: 1.1;
+    color: var(--brand-gold);
+  }
+
+  .about__stats dt {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--text-secondary);
+  }
+
+  @media (min-width: 40rem) {
+    .about__pillars {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .about__grid {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+      gap: var(--space-3xl);
+      align-items: start;
+    }
+
+    .about__figure {
+      position: sticky;
+      top: calc(var(--header-h) + var(--space-xl));
+    }
+  }
+</style>

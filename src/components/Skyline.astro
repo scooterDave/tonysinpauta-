@@ -1,0 +1,107 @@
+---
+// Decorative night skyline generated at build time (deterministic, no image request).
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+// Ground sits at y=240; the extra width and headroom in the viewBox keep towers
+// at roughly 80% scale on wide screens instead of cropping their tops.
+const W = 1800;
+const H = 240;
+const HEADROOM = 60;
+
+function random(seed: number) {
+  let s = seed;
+  return () => {
+    s = (s * 1664525 + 1013904223) % 4294967296;
+    return s / 4294967296;
+  };
+}
+
+function layer(seed: number, minH: number, maxH: number, minW: number, maxW: number) {
+  const r = random(seed);
+  let d = '';
+  for (let x = 0; x < W; ) {
+    const w = Math.round(minW + r() * (maxW - minW));
+    const top = H - Math.round(minH + r() * (maxH - minH));
+    d += `M${x} ${H}V${top}h${w}V${H}Z`;
+    if (r() > 0.72) d += `M${x + Math.round(w * 0.25)} ${top}v-${8 + Math.round(r() * 10)}h${Math.round(w * 0.5)}V${top}Z`;
+    if (r() > 0.86) d += `M${x + Math.round(w / 2) - 1} ${top}v-22h2v22Z`;
+    x += w;
+  }
+  return d;
+}
+
+const landmarks = [
+  // Tapered tower with mast
+  'M400 240V112L414 66h26l14 46V240Z',
+  'M426 66V24h2v42Z',
+  // Stepped art-deco tower with spire
+  'M1250 240V126h64V240Z',
+  'M1260 126V96h44v30Z',
+  'M1270 96V74h24v22Z',
+  'M1278 74V60h8v14Z',
+  'M1281 60V22h2v38Z',
+  // Crowned tower
+  'M1560 240V118h40V240Z',
+  'M1566 118l18-30 18 30Z',
+  'M1583 88V54h2v34Z',
+].join('');
+
+const far = layer(7, 70, 165, 26, 58);
+const near = layer(19, 34, 112, 34, 82) + landmarks;
+---
+
+<svg
+  class:list={['skyline', className]}
+  viewBox={`0 ${-HEADROOM} ${W} ${H + HEADROOM}`}
+  preserveAspectRatio="xMidYMax slice"
+  aria-hidden="true"
+  focusable="false"
+>
+  <defs>
+    <pattern id="skyline-windows-a" width="46" height="34" patternUnits="userSpaceOnUse">
+      <rect class="lit" x="6" y="6" width="3" height="5"></rect>
+      <rect class="lit" x="24" y="20" width="3" height="5"></rect>
+      <rect class="cool" x="36" y="8" width="3" height="5"></rect>
+      <rect class="lit" x="14" y="26" width="3" height="5"></rect>
+    </pattern>
+    <pattern id="skyline-windows-b" width="58" height="42" patternUnits="userSpaceOnUse" x="17" y="9">
+      <rect class="lit" x="4" y="14" width="3" height="5"></rect>
+      <rect class="cool" x="30" y="4" width="3" height="5"></rect>
+      <rect class="lit" x="44" y="30" width="3" height="5"></rect>
+    </pattern>
+  </defs>
+  <path class="far" d={far}></path>
+  <path class="far-windows" d={far} fill="url(#skyline-windows-b)"></path>
+  <path class="near" d={near}></path>
+  <path class="near-windows" d={near} fill="url(#skyline-windows-a)"></path>
+</svg>
+
+<style>
+  .skyline {
+    width: 100%;
+    height: 100%;
+  }
+
+  .far {
+    fill: var(--skyline-edge);
+  }
+
+  .near {
+    fill: var(--skyline-fill);
+  }
+
+  .far-windows {
+    opacity: 0.45;
+  }
+
+  .lit {
+    fill: var(--window-lit);
+  }
+
+  .cool {
+    fill: var(--window-cool);
+  }
+</style>

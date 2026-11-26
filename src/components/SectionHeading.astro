@@ -1,0 +1,79 @@
+---
+interface Props {
+  id: string;
+  number: string;
+  kicker: string;
+  title: string;
+  align?: 'start' | 'center';
+}
+
+const { id, number, kicker, title, align = 'start' } = Astro.props;
+---
+
+<header class:list={['sh', `sh--${align}`]}>
+  <p class="sh__kicker kicker">
+    <span class="sh__num">{number}</span>
+    <span>{kicker}</span>
+  </p>
+  <h2 class="sh__title" id={id}>{title}</h2>
+  {
+    Astro.slots.has('default') && (
+      <p class="sh__lede">
+        <slot />
+      </p>
+    )
+  }
+</header>
+
+<style>
+  .sh {
+    display: grid;
+    gap: var(--space-sm);
+    max-width: 46rem;
+    margin-bottom: var(--space-2xl);
+  }
+
+  .sh--center {
+    margin-inline: auto;
+    text-align: center;
+    justify-items: center;
+  }
+
+  .sh__kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .sh__kicker::after {
+    content: '';
+    width: 2.5rem;
+    height: 2px;
+    background: var(--brand-gold);
+  }
+
+  .sh__num {
+    padding: var(--space-2xs) var(--space-xs);
+    border-radius: var(--radius-sm);
+    background: var(--brand-red);
+    color: var(--text-on-brand);
+    line-height: 1;
+  }
+
+  .sh__title {
+    font-family: var(--font-display);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: var(--tracking-display);
+    line-height: 0.95;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  .sh__lede {
+    color: var(--text-secondary);
+    font-size: var(--font-size-lg);
+    max-width: 38rem;
+    text-wrap: pretty;
+  }
+</style>

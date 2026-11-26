@@ -1,0 +1,12 @@
+2026-11-25 | preview-build | bc-02482897 (frontend worker)
+Fast-tracked a single-page Spanish preview (Nocturno Broadcast) so Tony can review on his phone. Astro 7 static
+site; sections: hero, ticker, latest videos (build-time YouTube feed + committed fallback, click-to-load facades),
+featured interviews, about Tony, live show (non-committal schedule wording), booking/promo (call + WhatsApp
+(914) 512-6681), footer. site/base derive from SITE_URL (default https://scooterdave.github.io/tonysinpauta-/);
+CI passes the Pages base_url. deploy.yml: verify:fast -> upload-pages-artifact -> deploy-pages on push to main,
+daily 10:17 UTC, manual. Evidence: verify:fast exit 0 (astro check 0 errors, stylelint 0 problems, build ok);
+Playwright 390px + 1440px full-page: 0 overflow, 0 console errors, 0 broken images, 0 iframes before tap;
+axe WCAG 2.2 AA: 0 violations (contrast "incomplete" items are gradient backgrounds, hand-checked >= 4.5:1);
+initial transfer 182 KB mobile / 294 KB desktop. Ledger: deploy target set to GitHub Pages; T5-01 PR-preview
+criterion adapted because GitHub Pages has no per-PR previews. Open: Tony to confirm phone/WhatsApp, live
+schedule, social handles, and approve the visual direction (T1-04). verify:all (T2-03) not yet wired.

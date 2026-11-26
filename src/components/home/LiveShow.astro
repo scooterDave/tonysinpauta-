@@ -1,0 +1,183 @@
+---
+import Icon from '../Icon.astro';
+import SectionHeading from '../SectionHeading.astro';
+import VideoCard from '../VideoCard.astro';
+import { SHOW_CLIPS } from '../../data/featured';
+import { CHANNEL } from '../../data/site';
+
+const INGREDIENTS = ['Artistas invitados', 'Karaoke', 'Música', 'Mezclas del DJ', 'Comentarios en vivo'];
+---
+
+<section class="section live" id="en-vivo" aria-labelledby="en-vivo-title">
+  <div class="container live__grid">
+    <div class="live__intro">
+      <SectionHeading id="en-vivo-title" number="04" kicker="El show en vivo" title="Una noche de Tony Sin Pauta">
+        Transmisiones de hora y media a tres horas, con mezclas del DJ, artistas invitados, karaoke y la gente comentando en vivo
+        desde donde esté.
+      </SectionHeading>
+      <ul class="live__chips" role="list">
+        {INGREDIENTS.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
+
+    <aside class="board" aria-labelledby="board-title">
+      <h3 class="board__label kicker" id="board-title">
+        <span class="board__dot" aria-hidden="true"></span>
+        La hora del show
+      </h3>
+      <p class="board__time">9:00 <span>PM</span></p>
+      <p class="board__zone">Hora de Nueva York · ET</p>
+      <p class="board__note">
+        Los en vivo de Tony Sin Pauta han salido de noche, los fines de semana. Las próximas fechas se anuncian en el canal:
+        suscríbete y activa la campanita para que YouTube te avise.
+      </p>
+      <div class="board__actions">
+        <a class="btn btn--primary" href={CHANNEL.subscribeUrl}>
+          <Icon name="bell" />
+          Activar avisos en YouTube
+        </a>
+        <a class="text-link" href={CHANNEL.streamsUrl}>
+          Ver transmisiones anteriores
+          <Icon name="arrow" />
+        </a>
+      </div>
+    </aside>
+  </div>
+
+  <div class="container">
+    <h3 class="live__subhead">Revive el show</h3>
+  </div>
+  <ul class="shelf live__clips" role="list" aria-label="Transmisiones y mezclas">
+    {
+      SHOW_CLIPS.map((clip) => (
+        <li>
+          <VideoCard
+            video={clip}
+            badge={clip.badge}
+            headingLevel="h4"
+            sizes="(min-width: 64rem) 18rem, (min-width: 48rem) 45vw, 78vw"
+          />
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .live {
+    background: var(--gradient-section-glow);
+  }
+
+  .live__grid {
+    display: grid;
+    gap: var(--space-2xl);
+    align-items: center;
+  }
+
+  .live__intro :global(.sh) {
+    margin-bottom: var(--space-lg);
+  }
+
+  .live__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  .live__chips li {
+    padding: var(--space-2xs) var(--space-sm);
+    border: var(--border-width) solid var(--border-strong);
+    border-radius: var(--radius-pill);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+  }
+
+  .board {
+    position: relative;
+    display: grid;
+    gap: var(--space-sm);
+    padding: var(--space-xl) var(--space-lg);
+    border: var(--border-width) solid var(--border-strong);
+    border-radius: var(--radius-lg);
+    background: var(--pattern-scanlines), var(--bg-elevated);
+    box-shadow: var(--shadow-monitor);
+    overflow: hidden;
+  }
+
+  .board::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 4px;
+    background: var(--gradient-red-bar);
+  }
+
+  .board__label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
+  .board__dot {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: var(--radius-pill);
+    background: var(--brand-red-bright);
+    box-shadow: var(--shadow-live-dot);
+  }
+
+  .board__time {
+    font-family: var(--font-display);
+    font-size: var(--font-size-display);
+    letter-spacing: var(--tracking-display);
+    line-height: 0.85;
+    color: var(--text-primary);
+  }
+
+  .board__time span {
+    color: var(--brand-gold);
+  }
+
+  .board__zone {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--text-secondary);
+  }
+
+  .board__note {
+    margin-top: var(--space-sm);
+    padding-top: var(--space-md);
+    border-top: var(--border-width) dashed var(--border-strong);
+    color: var(--text-secondary);
+  }
+
+  .board__actions {
+    display: grid;
+    gap: var(--space-md);
+    justify-items: start;
+    margin-top: var(--space-xs);
+  }
+
+  .live__subhead {
+    margin: var(--space-3xl) 0 var(--space-lg);
+    font-family: var(--font-display);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: var(--tracking-display);
+    text-transform: uppercase;
+  }
+
+  .live__clips {
+    --shelf-cols: 4;
+  }
+
+  @media (min-width: 64rem) {
+    .live__grid {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: var(--space-3xl);
+    }
+  }
+</style>

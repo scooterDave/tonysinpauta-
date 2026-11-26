@@ -1,0 +1,474 @@
+{
+  "schemaVersion": "1.0.0",
+  "project": "tonysinpauta-site",
+  "domain": "tonysinpauta.com",
+  "youtubeChannel": "https://youtube.com/@tonysinpauta2888",
+  "hostingBudgetUsdMonthly": 0,
+  "hosting": {
+    "provider": "GitHub Pages (project site, deployed by GitHub Actions)",
+    "repository": "scooterDave/tonysinpauta-",
+    "previewUrl": "https://scooterdave.github.io/tonysinpauta-/",
+    "customDomain": "tonysinpauta.com (connect in Phase 5)",
+    "workflow": ".github/workflows/deploy.yml"
+  },
+  "previewBuild": {
+    "date": "2026-11-25",
+    "note": "A single-page Spanish preview was fast-tracked ahead of the phase gates so Tony can review the Nocturno Broadcast direction on his phone. It partially covers T0-01, T0-02, T1-02, T1-03, T2-01, T2-02, T3-01..T3-03, T4-02 and T5-01; the Development Manager should verify and reconcile those tasks rather than rebuild them. Tony's approval of this preview is the pending Phase 1 human sign-off (T1-04).",
+    "evidence": "harness/progress.log"
+  },
+  "currentPhase": 0,
+  "phaseGatePolicy": "Strict sequential phases (0 -> 5). All tasks in phase N must have passes=true before Manager increments currentPhase. Phase 1 requires explicit human visual sign-off before any Phase 2/3 feature code.",
+  "ledgerRules": [
+    "Never delete tasks or weaken acceptanceCriteria.",
+    "Workers may propose status='in_review' with an evidence object; only the Development Manager may set passes=true and status='done' after verifying evidence.",
+    "Do not edit tasks outside your assigned Task ID."
+  ],
+  "phases": [
+    {
+      "phase": 0,
+      "name": "Harness & Repo Bootstrap",
+      "humanApprovalRequired": false,
+      "exitGate": "Repo initialized with git-tracked harness files, init.sh healthy, and verify:fast passing locally and in GitHub Actions CI."
+    },
+    {
+      "phase": 1,
+      "name": "Brand Assets & Design Tokens/Mockups (Design-First Lock)",
+      "humanApprovalRequired": true,
+      "exitGate": "Brand brief and optimized media complete; static desktop/mobile mockups pass contrast and anti-slop evaluator critique; human approval recorded in docs/design/approval.md; tokens.css and .stylelintrc.json frozen."
+    },
+    {
+      "phase": 2,
+      "name": "Architecture & Static Scaffold",
+      "humanApprovalRequired": false,
+      "exitGate": "Static SSG scaffold (Astro) renders with approved tokens, BaseLayout/Header/Footer and LiteYouTube facade built, content schemas frozen, and full Playwright/axe/Lighthouse harness green on stub routes."
+    },
+    {
+      "phase": 3,
+      "name": "Feature Build via Parallel Subagents",
+      "humanApprovalRequired": false,
+      "exitGate": "All site sections built in disjoint git worktrees, rebased and merged cleanly into integration branch, zero Stylelint token errors, verify:fast green."
+    },
+    {
+      "phase": 4,
+      "name": "Visual, Accessibility, SEO & Performance Verification",
+      "humanApprovalRequired": false,
+      "exitGate": "Independent QA Verifier returns SHIP on integrated branch: 0 horizontal overflow (375/768/1440px), 0 critical/serious axe WCAG 2.2 AA violations, Lighthouse thresholds green, bundle <=500KB, visual baselines committed."
+    },
+    {
+      "phase": 5,
+      "name": "Free Hosting Launch & DNS Cutover",
+      "humanApprovalRequired": true,
+      "exitGate": "Site deployed to free static hosting (GitHub Pages), https://tonysinpauta.com live with valid TLS, post-deploy smoke and Lighthouse checks pass, owner maintenance runbook delivered."
+    }
+  ],
+  "tasks": [
+    {
+      "id": "T0-01",
+      "phase": 0,
+      "title": "Initialize repository and install tracked starter harness files",
+      "ownerRole": "development-manager",
+      "parallelGroup": null,
+      "dependsOn": [],
+      "ownedPaths": [
+        "AGENTS.md",
+        "harness/**",
+        ".gitignore",
+        "README.md"
+      ],
+      "acceptanceCriteria": [
+        "Git repository initialized on main branch with clean initial commit.",
+        "AGENTS.md, harness/feature-ledger.json, harness/delegation-protocol.md, harness/verification-gates.md, and harness/progress.log are committed and tracked in git.",
+        "None of AGENTS.md or harness/** appear in .gitignore."
+      ],
+      "verificationGate": "tier1",
+      "status": "pending",
+      "passes": false,
+      "evidence": null
+    },
+    {
+      "id": "T0-02",
+      "phase": 0,
+      "title": "Create deterministic init.sh and baseline package scripts",
+      "ownerRole": "perf-seo-deploy-specialist",
+      "parallelGroup": null,
+      "dependsOn": ["T0-01"],
+      "ownedPaths": [
+        "harness/init.sh",
+        "package.json",
+        "package-lock.json"
+      ],
+      "acceptanceCriteria": [
+        "harness/init.sh installs dependencies cleanly and verifies local preview server health on an explicit port.",
+        "package.json defines dev, build, verify:fast, and verify:all scripts.",
+        "Zero paid or runtime-server dependencies are present in package.json."
+      ],
+      "verificationGate": "tier1",
+      "status": "pending",
+      "passes": false,
+      "evidence": null
+    },
+    {
+      "id": "T0-03",
+      "phase": 0,
+      "title": "Configure free-tier GitHub Actions verification workflow",
+      "ownerRole": "perf-seo-deploy-specialist",
+      "parallelGroup": null,
+      "dependsOn": ["T0-02"],
+      "ownedPaths": [
+        ".github/workflows/verify.yml"
+      ],
+      "acceptanceCriteria": [
+        "Workflow runs on pull_request and push to main using ubuntu-latest.",
+        "Executes npm ci, npm run verify:fast, and uploads Playwright/Lighthouse artifacts on failure.",
+        "Initial CI check passes green."
+      ],
+      "verificationGate": "tier1",
+      "status": "pending",
+      "passes": false,
+      "evidence": null
+    },
+    {
+      "id": "T1-01",
+      "phase": 1,
+      "title": "Audit Tony Sin Pauta YouTube channel & promotional/social assets",
+      "ownerRole": "asset-content-curator",
+      "parallelGroup": null,
+      "dependsOn": ["T0-03"],
+      "ownedPaths": [
+        "docs/brand/brand-brief.md",
+        "docs/brand/asset-inventory.json"
+      ],
+      "acceptanceCriteria": [
+        "brand-brief.md documents Tony Sin Pauta's channel positioning, language/tone, audience, visual cues (banner, avatar, thumbnails, typography), and verified official links.",
+        "asset-inventory.json catalogs every gathered or user-supplied visual asset with source URL, resolution, aspect ratio, usage role, and rights/ownership status.",
+        "Identifies any missing high-resolution brand assets that must be requested from Tony/user."
+      ],
+      "verificationGate": "tier1",
+      "status": "pending",
+      "passes": false,
+      "evidence": null
+    },
+    {
+      "id": "T1-02",
+      "phase": 1,
+      "title": "Optimize and normalize brand media assets and starter content datasets",
+      "ownerRole": "asset-content-curator",
+      "parallelGroup": null,
+      "dependsOn": ["T1-01"],
+      "ownedPaths": [
+        "public/media/**",
+        "src/content/**"
+      ],
+      "acceptanceCriteria": [
+        "Images converted to web-optimized AVIF/WebP with PNG/JPG fallback where needed (hero <=150KB, cards/avatars <=60KB).",
+        "Starter structured JSON/Markdown files created for channel metadata, featured videos, bio/about copy, and social/booking links.",
+        "No placeholder Lorem Ipsum copy; real channel copy or clearly tagged [NEEDS_OWNER_COPY] items documented."
+      ],
+      "verificationGate": "tier1",
+      "status": "pending",
+      "passes": false,
+      "evidence": null
+    },
+    {
+      "id": "T1-03",
+      "phase": 1,
+      "title": "Derive design system, frozen CSS tokens, Stylelint rules, and static mockups",
+      "ownerRole": "design-system-architect",
+      "parallelGroup": null,
+      "dependsOn": ["T1-01", "T1-02"],
+      "ownedPaths": [
+        "docs/design/design-system.md",
+        "docs/design/mockups/**",
+        "src/styles/tokens.css",
+        ".stylelintrc.json"
+      ],
+      "acceptanceCriteria": [
+        "Color palette, typography pairing, spacing scale, and layout motifs trace directly to Tony Sin Pauta's real promotional/channel visuals.",
+        "All text/background token pairings verified >=4.5:1 (body) and >=3.0:1 (large/UI) contrast.",
+        "Static HTML/CSS mockups render cleanly at 375px mobile and 1440px desktop with real media and copy.",
+        ".stylelintrc.json mechanically blocks raw colors, off-scale font sizes/weights, and unscaled spacing outside tokens.css."
+      ],
+      "verificationGate": "tier2",
+      "status": "pending",
+      "passes": false,
+      "evidence": null
+    },
+    {
+      "id": "T1-04",
+      "phase": 1,
+      "title": "Independent aesthetic critique and mandatory human design sign-off",
+      "ownerRole": "qa-visual-a11y-verifier",
+      "parallelGroup": null,
+      "dependsOn": ["T1-03"],
+      "ownedPaths": [
+        "docs/qa/phase1-design-critique.md",
+        "docs/design/approval.md"
+      ],
+      "acceptanceCriteria": [
+        "QA Verifier renders Phase 1 mockups in Playwright (375px and 1440px), runs axe-core contrast check, and scores Design Quality, Originality, Craft, and Functionality against the anti-slop rubric.",
+        "User reviews screenshots/mockups and explicitly approves the visual direction.",
+        "docs/design/approval.md records approval date, approved mockup variant, and freezes tokens.css + .stylelintrc.json."
+      ],
+      "verificationGate": "human-approval",
+      "status": "pending",
+      "passes": false,
+      "evidence": null
+    },
+    {
+      "id": "T2-01",
+      "phase": 2,
+      "title": "Scaffold static SSG project, BaseLayout, navigation shell, and YouTube facade",
+      "ownerRole": "frontend-builder",
+      "parallelGroup": null,
+      "dependsOn": ["T1-04"],
+      "ownedPaths": [
+        "astro.config.mjs",
+        "tsconfig.json",
+        "src/layouts/**",
+        "src/components/common/**",
+        "src/styles/global.css"
+      ],
+      "acceptanceCriteria": [
+        "Astro static output configured (output: 'static', zero server adapters).",
+        "BaseLayout, responsive Header/Nav, Footer, and click-to-load LiteYouTube facade implemented strictly using tokens.css variables.",
+        "Stylelint, TypeScript check, and production static build pass with zero errors."
+      ],
+      "verificationGate": "tier1",
+      "status": "pending",
+      "passes": false,
+      "evidence": null
+    },
+    {
+      "id": "T2-02",
+      "phase": 2,
+      "title": "Freeze content schemas and build-time YouTube RSS feed loader",
+      "ownerRole": "perf-seo-deploy-specialist",
+      "parallelGroup": null,
+      "dependsOn": ["T2-01"],
+      "ownedPaths": [
+        "docs/architecture/site-architecture.md",
+        "src/content/config.ts",
+        "src/lib/youtube-feed.ts"
+      ],
+      "acceptanceCriteria": [
+        "Typed schemas validate all content collections at build time.",
+        "Build-time YouTube channel Atom/RSS XML fetcher populates latest videos with zero API key cost and falls back cleanly to committed static JSON when offline.",
+        "site-architecture.md documents frozen contracts for Phase 3 parallel builders."
+      ],
+      "verificationGate": "tier1",
+      "status": "pending",
+      "passes": false,
+      "evidence": null
+    },
+    {
+      "id": "T2-03",
+      "phase": 2,
+      "title": "Wire Playwright layout/visual/axe suite and Lighthouse CI budgets",
+      "ownerRole": "qa-visual-a11y-verifier",
+      "parallelGroup": null,
+      "dependsOn": ["T2-01", "T2-02"],
+      "ownedPaths": [
+        "playwright.config.ts",
+        ".lighthouserc.json",
+        "tests/**"
+      ],
+      "acceptanceCriteria": [
+        "Playwright tests check 375px, 768px, and 1440px horizontal overflow, CLS, broken images, and @axe-core/playwright WCAG 2.2 AA tags.",
+        "Lighthouse CI configured with 3 runs and required median/pessimistic thresholds.",
+        "npm run verify:all passes end-to-end against the Phase 2 scaffold."
+      ],
+      "verificationGate": "tier2",
+      "status": "pending",
+      "passes": false,
+      "evidence": null
+    },
+    {
+      "id": "T3-01",
+      "phase": 3,
+      "title": "Build Home hero, featured episode spotlight, and latest videos section",
+      "ownerRole": "frontend-builder",
+      "parallelGroup": "phase-3-sections",
+      "dependsOn": ["T2-03"],
+      "ownedPaths": [
+        "src/components/home/**",
+        "src/pages/index.astro"
+      ],
+      "acceptanceCriteria": [
+        "Home page implements approved Phase 1 visual hero, subscribe/watch CTAs, and latest YouTube videos using LiteYouTube click-to-load facades.",
+        "Zero raw CSS values (Stylelint passes 100%).",
+        "Responsive layout holds cleanly at 375px, 768px, and 1440px with zero horizontal overflow."
+      ],
+      "verificationGate": "tier1",
+      "status": "pending",
+      "passes": false,
+      "evidence": null
+    },
+    {
+      "id": "T3-02",
+      "phase": 3,
+      "title": "Build About Tony Sin Pauta, show highlights, and social hub section/page",
+      "ownerRole": "frontend-builder",
+      "parallelGroup": "phase-3-sections",
+      "dependsOn": ["T2-03"],
+      "ownedPaths": [
+        "src/components/about/**",
+        "src/pages/about.astro"
+      ],
+      "acceptanceCriteria": [
+        "Presents creator bio, show format/themes, milestone highlights, and verified social platform links from src/content/.",
+        "Uses only approved tokens.css custom properties and semantic HTML landmarks/headings.",
+        "Passes verify:fast with zero lint, type, or build errors."
+      ],
+      "verificationGate": "tier1",
+      "status": "pending",
+      "passes": false,
+      "evidence": null
+    },
+    {
+      "id": "T3-03",
+      "phase": 3,
+      "title": "Build Booking, Collaborations & Contact section/page (zero-cost static)",
+      "ownerRole": "frontend-builder",
+      "parallelGroup": "phase-3-sections",
+      "dependsOn": ["T2-03"],
+      "ownedPaths": [
+        "src/components/contact/**",
+        "src/pages/contact.astro"
+      ],
+      "acceptanceCriteria": [
+        "Provides clear press/sponsor/booking contact flow with $0 recurring cost (mailto:/social links or free static form endpoint with progressive enhancement).",
+        "Includes accessible labels, focus states, and spam-safe behavior without paid SaaS.",
+        "Passes verify:fast with zero lint, type, or build errors."
+      ],
+      "verificationGate": "tier1",
+      "status": "pending",
+      "passes": false,
+      "evidence": null
+    },
+    {
+      "id": "T3-04",
+      "phase": 3,
+      "title": "Integrate Phase 3 parallel worktrees in dependency order",
+      "ownerRole": "development-manager",
+      "parallelGroup": null,
+      "dependsOn": ["T3-01", "T3-02", "T3-03"],
+      "ownedPaths": [
+        "harness/progress.log",
+        "harness/feature-ledger.json"
+      ],
+      "acceptanceCriteria": [
+        "Worktrees for T3-01, T3-02, and T3-03 rebased and merged cleanly without unresolved conflicts or file-ownership violations.",
+        "Temporary worktrees pruned and verify:fast passes on the integrated branch.",
+        "Navigation links connect all implemented pages/sections with zero 404s."
+      ],
+      "verificationGate": "tier1",
+      "status": "pending",
+      "passes": false,
+      "evidence": null
+    },
+    {
+      "id": "T4-01",
+      "phase": 4,
+      "title": "Run independent whole-branch Playwright layout, visual regression, and axe-core WCAG 2.2 AA audit",
+      "ownerRole": "qa-visual-a11y-verifier",
+      "parallelGroup": null,
+      "dependsOn": ["T3-04"],
+      "ownedPaths": [
+        "tests/**",
+        "docs/qa/phase4-qa-report.md"
+      ],
+      "acceptanceCriteria": [
+        "Zero horizontal overflow, zero broken images/links, and CLS <=0.1 across 375px, 768px, and 1440px on every route.",
+        "Zero critical or serious @axe-core/playwright WCAG 2.2 AA violations; keyboard navigation verified.",
+        "Visual regression baselines captured on Linux CI and committed; Evaluator anti-slop rubric passes >= threshold.",
+        "QA report returns SHIP (or logs concrete defects for targeted builder fixes before re-run)."
+      ],
+      "verificationGate": "tier2",
+      "status": "pending",
+      "passes": false,
+      "evidence": null
+    },
+    {
+      "id": "T4-02",
+      "phase": 4,
+      "title": "Verify Lighthouse CI budgets, SEO/OpenGraph/JSON-LD metadata, and static transfer budget",
+      "ownerRole": "perf-seo-deploy-specialist",
+      "parallelGroup": null,
+      "dependsOn": ["T3-04"],
+      "ownedPaths": [
+        "src/components/seo/**",
+        "public/robots.txt",
+        "docs/qa/phase4-seo-perf-report.md"
+      ],
+      "acceptanceCriteria": [
+        "Lighthouse CI (3 runs) passes: Performance >=0.90 (median), Accessibility >=0.95 (target 1.0, pessimistic), Best Practices >=0.95 (pessimistic), SEO >=0.95 (target 1.0, pessimistic), CLS <=0.1.",
+        "Every route has unique title, meta description, canonical https://tonysinpauta.com/ URL, OpenGraph/Twitter card tags, sitemap.xml, and Person/VideoObject JSON-LD.",
+        "Initial page transfer weight <=500KB (excluding user-clicked video playback) and $0 recurring cost verified."
+      ],
+      "verificationGate": "tier2",
+      "status": "pending",
+      "passes": false,
+      "evidence": null
+    },
+    {
+      "id": "T5-01",
+      "phase": 5,
+      "title": "Configure automated $0 static deployment workflow (GitHub Pages)",
+      "ownerRole": "perf-seo-deploy-specialist",
+      "parallelGroup": null,
+      "dependsOn": ["T4-01", "T4-02"],
+      "ownedPaths": [
+        ".github/workflows/deploy.yml",
+        "docs/architecture/dns-launch-runbook.md"
+      ],
+      "acceptanceCriteria": [
+        "Automated deployment builds and publishes dist/ to free static hosting on merge to main (GitHub Pages has no per-PR preview URLs; PRs are gated by the verify workflow instead).",
+        "Optional scheduled daily/weekly rebuild workflow documented to refresh YouTube RSS video feed for $0.",
+        "dns-launch-runbook.md documents exact apex/www DNS records, TLS settings, and rollback steps."
+      ],
+      "verificationGate": "tier1",
+      "status": "pending",
+      "passes": false,
+      "evidence": null
+    },
+    {
+      "id": "T5-02",
+      "phase": 5,
+      "title": "Execute tonysinpauta.com DNS cutover and SSL/HTTPS verification",
+      "ownerRole": "development-manager",
+      "parallelGroup": null,
+      "dependsOn": ["T5-01"],
+      "ownedPaths": [
+        "harness/progress.log"
+      ],
+      "acceptanceCriteria": [
+        "User applies DNS records from dns-launch-runbook.md at domain registrar.",
+        "Both https://tonysinpauta.com and https://www.tonysinpauta.com resolve cleanly with valid TLS certificate and canonical redirect."
+      ],
+      "verificationGate": "human-approval",
+      "status": "pending",
+      "passes": false,
+      "evidence": null
+    },
+    {
+      "id": "T5-03",
+      "phase": 5,
+      "title": "Run post-launch live production smoke test and deliver owner handoff guide",
+      "ownerRole": "qa-visual-a11y-verifier",
+      "parallelGroup": null,
+      "dependsOn": ["T5-02"],
+      "ownedPaths": [
+        "docs/qa/phase5-launch-verification.md",
+        "docs/owner-maintenance-guide.md"
+      ],
+      "acceptanceCriteria": [
+        "Live https://tonysinpauta.com returns HTTP 200, zero console errors, working YouTube facades, valid OpenGraph preview, and passing live Lighthouse audit.",
+        "docs/owner-maintenance-guide.md explains in plain language how to update bio/links/videos or trigger a rebuild at $0/month."
+      ],
+      "verificationGate": "live-smoke",
+      "status": "pending",
+      "passes": false,
+      "evidence": null
+    }
+  ]
+}

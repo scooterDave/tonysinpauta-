@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Ticker from '../components/Ticker.astro';
+import Hero from '../components/home/Hero.astro';
+import LatestVideos from '../components/home/LatestVideos.astro';
+import Interviews from '../components/home/Interviews.astro';
+import AboutTony from '../components/home/AboutTony.astro';
+import LiveShow from '../components/home/LiveShow.astro';
+import Booking from '../components/home/Booking.astro';
+import { CHANNEL, ON_THE_CHANNEL } from '../data/site';
+import { absoluteUrl } from '../lib/paths';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': `${absoluteUrl()}#website`,
+      url: absoluteUrl(),
+      name: CHANNEL.name,
+      alternateName: `${CHANNEL.name} — ${CHANNEL.tagline}`,
+      inLanguage: 'es',
+    },
+    {
+      '@type': 'Person',
+      '@id': `${absoluteUrl()}#tony`,
+      name: CHANNEL.host,
+      alternateName: CHANNEL.name,
+      jobTitle: 'Host y productor',
+      url: absoluteUrl(),
+      image: absoluteUrl('og-image.jpg'),
+      sameAs: [CHANNEL.url],
+    },
+  ],
+};
+---
+
+<BaseLayout
+  title="Tony Sin Pauta | Tu Show Nocturno con Tony González"
+  description="El show de Tony González: entrevistas sin filtro con figuras de la bachata y el merengue, mega mezclas, música y en vivos desde Nueva York."
+  jsonLd={jsonLd}
+>
+  <Hero />
+  <Ticker label="En el canal" items={[...ON_THE_CHANNEL, 'Bachata', 'Merengue', 'Karaoke', 'Mega mezclas']} />
+  <LatestVideos />
+  <Interviews />
+  <AboutTony />
+  <LiveShow />
+  <Booking />
+</BaseLayout>

@@ -1,0 +1,67 @@
+---
+import '@fontsource/bebas-neue/latin-400.css';
+import '@fontsource-variable/plus-jakarta-sans/wght.css';
+import '@fontsource/space-mono/latin-400.css';
+import '@fontsource/space-mono/latin-700.css';
+import '../styles/global.css';
+import bebasWoff2 from '@fontsource/bebas-neue/files/bebas-neue-latin-400-normal.woff2?url';
+import jakartaWoff2 from '@fontsource-variable/plus-jakarta-sans/files/plus-jakarta-sans-latin-wght-normal.woff2?url';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { CHANNEL } from '../data/site';
+import { absoluteUrl, isPreviewHost, withBase } from '../lib/paths';
+
+interface Props {
+  title: string;
+  description: string;
+  path?: string;
+  isHome?: boolean;
+  noindex?: boolean;
+  jsonLd?: Record<string, unknown>;
+}
+
+const { title, description, path = '', isHome = true, noindex = isPreviewHost, jsonLd } = Astro.props;
+const canonical = absoluteUrl(path);
+const ogImage = absoluteUrl('og-image.jpg');
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#080a12" />
+    <link rel="icon" href={withBase('favicon.svg')} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={withBase('apple-touch-icon.png')} />
+    <link rel="preload" href={bebasWoff2} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={jakartaWoff2} as="font" type="font/woff2" crossorigin />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_US" />
+    <meta property="og:site_name" content={CHANNEL.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Tony González en el programa Tony Sin Pauta, frente al skyline de Nueva York de noche" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <Header isHome={isHome} />
+    <main id="contenido" tabindex="-1">
+      <slot />
+    </main>
+    <Footer isHome={isHome} />
+  </body>
+</html>

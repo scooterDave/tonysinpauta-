@@ -1,0 +1,231 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/brand/logo-tony-sin-pauta.png';
+import Icon from './Icon.astro';
+import { CHANNEL, NAV } from '../data/site';
+import { withBase } from '../lib/paths';
+
+interface Props {
+  isHome?: boolean;
+}
+
+const { isHome = true } = Astro.props;
+const link = (hash: string) => (isHome ? hash : withBase(hash));
+---
+
+<header class="site-header">
+  <div class="container site-header__bar">
+    <a class="site-header__brand" href={isHome ? '#inicio' : withBase()}>
+      <Image src={logo} alt="Tony Sin Pauta — inicio" widths={[120, 240, 360]} sizes="7rem" loading="eager" />
+    </a>
+
+    <nav class="site-nav" aria-label="Principal">
+      <ul role="list">
+        {
+          NAV.map((item) => (
+            <li>
+              <a href={link(item.href)}>{item.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <a class="btn btn--primary btn--sm site-header__subscribe" href={CHANNEL.subscribeUrl}>
+      <Icon name="youtube" />
+      Suscríbete
+    </a>
+
+    <button class="site-header__menu" type="button" popovertarget="menu-movil" aria-label="Abrir menú">
+      <Icon name="menu" />
+    </button>
+  </div>
+</header>
+
+<nav id="menu-movil" class="mobile-nav" popover aria-label="Menú">
+  <div class="mobile-nav__top">
+    <span class="kicker">Menú</span>
+    <button class="mobile-nav__close" type="button" popovertarget="menu-movil" popovertargetaction="hide" aria-label="Cerrar menú">
+      <Icon name="close" />
+    </button>
+  </div>
+  <ol role="list" class="mobile-nav__list">
+    {
+      NAV.map((item, i) => (
+        <li>
+          <a href={link(item.href)}>
+            <span class="mobile-nav__num">{String(i + 1).padStart(2, '0')}</span>
+            {item.label}
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+  <a class="btn btn--primary mobile-nav__cta" href={CHANNEL.subscribeUrl}>
+    <Icon name="youtube" />
+    Suscríbete en YouTube
+  </a>
+</nav>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--bg-header);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: var(--border-width) solid var(--border-subtle);
+  }
+
+  .site-header__bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    height: var(--header-h);
+  }
+
+  .site-header__brand {
+    display: block;
+    flex: none;
+    margin-right: auto;
+    border-radius: var(--radius-sm);
+  }
+
+  .site-header__brand img {
+    width: 6.25rem;
+  }
+
+  .site-nav {
+    display: none;
+  }
+
+  .site-nav ul {
+    display: flex;
+    gap: var(--space-lg);
+  }
+
+  .site-nav a {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 150ms var(--ease-out);
+  }
+
+  .site-nav a:hover {
+    color: var(--text-primary);
+  }
+
+  .site-header__menu,
+  .mobile-nav__close {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    border: var(--border-width) solid var(--border-strong);
+    border-radius: var(--radius-pill);
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .site-header__menu svg,
+  .mobile-nav__close svg {
+    width: 1.375rem;
+    height: 1.375rem;
+  }
+
+  @media (min-width: 64rem) {
+    .site-nav {
+      display: block;
+    }
+
+    .site-header__brand {
+      margin-right: var(--space-lg);
+    }
+
+    .site-nav {
+      margin-right: auto;
+    }
+
+    .site-header__menu {
+      display: none;
+    }
+  }
+
+  .mobile-nav {
+    inset: 0 0 0 auto;
+    width: min(100%, 22rem);
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: var(--space-lg);
+    border: 0;
+    border-left: var(--border-width) solid var(--border-subtle);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+  }
+
+  .mobile-nav:popover-open {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+  }
+
+  .mobile-nav::backdrop {
+    background: var(--bg-scrim);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .mobile-nav:popover-open {
+      animation: drawer-in 240ms var(--ease-out);
+    }
+  }
+
+  @keyframes drawer-in {
+    from {
+      transform: translateX(100%);
+    }
+  }
+
+  .mobile-nav__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .mobile-nav__list {
+    display: grid;
+    gap: var(--space-2xs);
+  }
+
+  .mobile-nav__list a {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-md);
+    padding: var(--space-xs) 0;
+    font-family: var(--font-display);
+    font-size: var(--font-size-2xl);
+    letter-spacing: var(--tracking-display);
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .mobile-nav__num {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xs);
+    color: var(--brand-gold);
+  }
+
+  .mobile-nav__cta {
+    margin-top: auto;
+  }
+</style>
+
+<script>
+  const menu = document.getElementById('menu-movil');
+  menu?.addEventListener('click', (event) => {
+    if (event.target instanceof Element && event.target.closest('a')) menu.hidePopover();
+  });
+</script>

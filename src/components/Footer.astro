@@ -1,0 +1,118 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/brand/logo-tony-sin-pauta.png';
+import Icon from './Icon.astro';
+import { CHANNEL, CONTACT, NAV } from '../data/site';
+import { withBase } from '../lib/paths';
+
+interface Props {
+  isHome?: boolean;
+}
+
+const { isHome = true } = Astro.props;
+const link = (hash: string) => (isHome ? hash : withBase(hash));
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__grid">
+    <div class="site-footer__brand">
+      <Image src={logo} alt="Tony Sin Pauta" widths={[220, 440]} sizes="13rem" />
+      <p class="site-footer__tag">{CHANNEL.tagline}</p>
+    </div>
+
+    <nav class="site-footer__nav" aria-label="Secciones">
+      <ul role="list">
+        {
+          NAV.map((item) => (
+            <li>
+              <a href={link(item.href)}>{item.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="site-footer__cta">
+      <a class="btn btn--primary" href={CHANNEL.subscribeUrl}>
+        <Icon name="youtube" />
+        Suscríbete en YouTube
+      </a>
+      <a class="text-link" href={CHANNEL.url}>
+        YouTube {CHANNEL.handle}
+        <Icon name="external" />
+      </a>
+      <a class="text-link" href={CONTACT.phoneHref}>
+        <Icon name="phone" />
+        {CONTACT.phoneDisplay}
+      </a>
+    </div>
+  </div>
+
+  <div class="container site-footer__legal">
+    <p>© {year} Tony Sin Pauta — Una producción de Tony González.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: var(--border-width) solid var(--border-subtle);
+    background: var(--bg-surface);
+  }
+
+  .site-footer__grid {
+    display: grid;
+    gap: var(--space-xl);
+    padding-block: var(--space-2xl);
+  }
+
+  .site-footer__brand img {
+    width: 12rem;
+  }
+
+  .site-footer__tag {
+    margin-top: var(--space-xs);
+    font-family: var(--font-display);
+    font-size: var(--font-size-xl);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+
+  .site-footer__nav ul {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-sm) var(--space-lg);
+  }
+
+  .site-footer__nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: var(--font-weight-medium);
+  }
+
+  .site-footer__nav a:hover {
+    color: var(--text-primary);
+    text-decoration: underline;
+  }
+
+  .site-footer__cta {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-md);
+  }
+
+  .site-footer__legal {
+    padding-block: var(--space-lg);
+    border-top: var(--border-width) solid var(--border-subtle);
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+  }
+
+  @media (min-width: 48rem) {
+    .site-footer__grid {
+      grid-template-columns: 1.2fr 1fr 1fr;
+      align-items: start;
+    }
+  }
+</style>

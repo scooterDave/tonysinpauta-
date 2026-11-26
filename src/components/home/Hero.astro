@@ -1,0 +1,309 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../../assets/brand/logo-tony-sin-pauta.png';
+import poster from '../../assets/brand/tony-poster-nyc.jpg';
+import Icon from '../Icon.astro';
+import Skyline from '../Skyline.astro';
+import { CHANNEL, STATS } from '../../data/site';
+
+const heroStats = STATS.filter((s) => s.label !== 'suscriptores');
+---
+
+<section class="hero" id="inicio" aria-labelledby="hero-title">
+  <div class="hero__sky" aria-hidden="true"></div>
+  <div class="hero__skyline" aria-hidden="true">
+    <Skyline />
+  </div>
+
+  <div class="container hero__grid">
+    <div class="hero__copy">
+      <p class="kicker hero__kicker">Tony González presenta</p>
+      <h1 class="hero__title" id="hero-title">
+        <Image
+          class="hero__logo"
+          src={logo}
+          alt="Tony Sin Pauta"
+          widths={[360, 540, 720, 1080]}
+          sizes="(min-width: 64rem) 34rem, 90vw"
+          loading="eager"
+          fetchpriority="high"
+        />
+        <span class="hero__show">{CHANNEL.tagline}</span>
+      </h1>
+      <p class="hero__lede">
+        Bachata, merengue, artistas invitados y entrevistas sin filtro. El show de Tony González para la comunidad dominicana y
+        latina, desde Nueva York.
+      </p>
+      <div class="hero__ctas">
+        <a class="btn btn--primary" href="#videos">
+          <Icon name="play" />
+          Ver lo más reciente
+        </a>
+        <a class="btn btn--ghost" href="#contrataciones">Contrataciones y promoción</a>
+      </div>
+      <ul class="hero__stats" role="list">
+        {
+          heroStats.map((stat) => (
+            <li>
+              <strong>{stat.value}</strong>
+              <span>{stat.label}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <figure class="hero__monitor">
+      <div class="monitor">
+        <Image
+          class="monitor__img"
+          src={poster}
+          alt="Tony González con camisa roja y los brazos cruzados frente al skyline de Nueva York de noche"
+          widths={[400, 600, 804]}
+          sizes="(min-width: 64rem) 36rem, 92vw"
+          loading="eager"
+        />
+        <span class="monitor__tag"><span class="monitor__dot" aria-hidden="true"></span>Canal oficial</span>
+        <span class="monitor__handle">{CHANNEL.handle}</span>
+      </div>
+      <figcaption class="monitor__caption">
+        <strong>Tony González</strong>
+        <span>Host y productor</span>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    padding-block: var(--space-2xl) var(--space-3xl);
+    background: var(--gradient-hero);
+  }
+
+  .hero__sky {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background: var(--gradient-stars);
+  }
+
+  .hero__skyline {
+    position: absolute;
+    inset: auto 0 0;
+    z-index: -1;
+    height: clamp(6.5rem, 13vw, 12rem);
+  }
+
+  .hero__grid {
+    display: grid;
+    gap: var(--space-2xl);
+    align-items: center;
+  }
+
+  .hero__copy {
+    display: grid;
+    gap: var(--space-lg);
+    justify-items: start;
+  }
+
+  .hero__kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .hero__kicker::before {
+    content: '';
+    width: 1.5rem;
+    height: 2px;
+    background: var(--brand-gold);
+  }
+
+  .hero__title {
+    display: grid;
+    gap: var(--space-xs);
+    justify-items: start;
+    font-weight: var(--font-weight-regular);
+  }
+
+  .hero__logo {
+    width: min(100%, 34rem);
+    filter: drop-shadow(0 18px 40px var(--glow-blue));
+  }
+
+  .hero__show {
+    position: relative;
+    padding: var(--space-2xs) var(--space-md);
+    font-family: var(--font-display);
+    font-size: var(--font-size-3xl);
+    letter-spacing: var(--tracking-display);
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--text-on-brand);
+  }
+
+  .hero__show::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: var(--radius-sm);
+    background: var(--gradient-red-bar);
+    transform: skewX(var(--bar-skew));
+    box-shadow: var(--shadow-button);
+  }
+
+  .hero__lede {
+    max-width: 34rem;
+    font-size: var(--font-size-lg);
+    color: var(--text-secondary);
+    text-wrap: pretty;
+  }
+
+  .hero__ctas {
+    display: grid;
+    gap: var(--space-sm);
+    width: 100%;
+  }
+
+  .hero__stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs) var(--space-lg);
+    padding: 0;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--text-secondary);
+  }
+
+  .hero__stats li {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-xs);
+  }
+
+  .hero__stats strong {
+    font-family: var(--font-display);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: var(--tracking-display);
+    color: var(--brand-gold);
+  }
+
+  .hero__monitor {
+    position: relative;
+    display: grid;
+    gap: var(--space-sm);
+  }
+
+  .monitor {
+    position: relative;
+    overflow: hidden;
+    border: 6px solid var(--bg-elevated);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-monitor);
+    background: var(--bg-surface);
+  }
+
+  .monitor__img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+
+  .monitor__tag,
+  .monitor__handle {
+    position: absolute;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    border-radius: var(--radius-sm);
+  }
+
+  .monitor__tag {
+    top: var(--space-sm);
+    left: var(--space-sm);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-2xs) var(--space-xs);
+    background: var(--brand-red);
+    color: var(--text-on-brand);
+  }
+
+  .monitor__dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: var(--radius-pill);
+    background: var(--text-on-brand);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .monitor__dot {
+      animation: blink 1.6s steps(2, jump-none) infinite;
+    }
+  }
+
+  @keyframes blink {
+    50% {
+      opacity: 0.2;
+    }
+  }
+
+  .monitor__handle {
+    right: var(--space-sm);
+    bottom: var(--space-sm);
+    padding: var(--space-2xs) var(--space-xs);
+    background: var(--bg-scrim);
+    color: var(--text-primary);
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .monitor__caption {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-2xs) var(--space-sm);
+    padding-left: var(--space-xs);
+    border-left: 3px solid var(--brand-red);
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+  }
+
+  .monitor__caption strong {
+    color: var(--text-primary);
+    font-weight: var(--font-weight-bold);
+  }
+
+  @media (min-width: 30rem) {
+    .hero__ctas {
+      display: flex;
+      flex-wrap: wrap;
+      width: auto;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .hero {
+      padding-block: var(--space-3xl) var(--space-4xl);
+    }
+
+    .hero__grid {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+      gap: var(--space-3xl);
+    }
+
+    .monitor {
+      transform: rotate(1.5deg);
+    }
+  }
+</style>

@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { withBase } from '../lib/paths';
+---
+
+<BaseLayout
+  title="Página no encontrada | Tony Sin Pauta"
+  description="Esta página no existe. Vuelve al inicio de Tony Sin Pauta para ver los videos, entrevistas y en vivos de Tony González."
+  path="404/"
+  isHome={false}
+  noindex
+>
+  <section class="section not-found" aria-labelledby="nf-title">
+    <div class="container not-found__inner">
+      <p class="kicker">Error 404 · Fuera del aire</p>
+      <h1 id="nf-title">Esta página se quedó sin señal</h1>
+      <p>La dirección que buscas no existe o cambió de lugar.</p>
+      <a class="btn btn--primary" href={withBase()}>
+        <Icon name="arrow" />
+        Volver al inicio
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    min-height: 60svh;
+    display: grid;
+    align-items: center;
+    background: var(--gradient-hero);
+  }
+
+  .not-found__inner {
+    display: grid;
+    gap: var(--space-md);
+    justify-items: start;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-regular);
+    line-height: 0.95;
+    text-transform: uppercase;
+  }
+
+  p:not(.kicker) {
+    color: var(--text-secondary);
+    font-size: var(--font-size-lg);
+  }
+</style>

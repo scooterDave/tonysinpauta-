@@ -1,0 +1,148 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  label: string;
+  items: readonly string[];
+}
+
+const { label, items } = Astro.props;
+---
+
+<section class="ticker" aria-label={label}>
+  <p class="ticker__label">{label}</p>
+  <div class="ticker__viewport">
+    <div class="ticker__track">
+      <ul role="list" class="ticker__list">
+        {items.map((item) => <li>{item}</li>)}
+      </ul>
+      <ul role="list" class="ticker__list" aria-hidden="true">
+        {items.map((item) => <li>{item}</li>)}
+      </ul>
+    </div>
+  </div>
+  <label class="ticker__pause">
+    <input type="checkbox" class="sr-only" />
+    <Icon name="pause" />
+    <span class="sr-only">Pausar la cinta</span>
+  </label>
+</section>
+
+<style>
+  .ticker {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: stretch;
+    background: var(--gradient-ticker);
+    color: var(--text-on-brand);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .ticker__label {
+    flex: none;
+    display: flex;
+    align-items: center;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--bg-canvas);
+    color: var(--brand-gold);
+  }
+
+  .ticker__viewport {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+
+  .ticker__track {
+    display: flex;
+    width: max-content;
+  }
+
+  .ticker__list {
+    display: flex;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ticker__list li {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    padding-inline: var(--space-md);
+  }
+
+  .ticker__list li::after {
+    content: '';
+    width: 0.4rem;
+    height: 0.4rem;
+    margin-left: var(--space-xl);
+    border-radius: var(--radius-pill);
+    background: var(--text-on-brand);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .ticker__track {
+      animation: ticker 45s linear infinite;
+    }
+
+    .ticker:has(input:checked) .ticker__track,
+    .ticker:hover .ticker__track {
+      animation-play-state: paused;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ticker__track {
+      width: auto;
+    }
+
+    .ticker__list {
+      flex-wrap: wrap;
+      padding-block: var(--space-xs);
+    }
+
+    .ticker__list[aria-hidden='true'] {
+      display: none;
+    }
+
+    .ticker__pause {
+      display: none;
+    }
+  }
+
+  @keyframes ticker {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  .ticker__pause {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    background: var(--brand-red-hover);
+    cursor: pointer;
+  }
+
+  .ticker__pause svg {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+
+  .ticker__pause:has(input:focus-visible) {
+    box-shadow: var(--focus-ring);
+  }
+
+  .ticker__pause:has(input:checked) {
+    background: var(--bg-canvas);
+    color: var(--brand-gold);
+  }
+</style>

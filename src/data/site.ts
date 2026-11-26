@@ -1,0 +1,49 @@
+export const CHANNEL = {
+  name: 'Tony Sin Pauta',
+  tagline: 'Tu Show Nocturno',
+  host: 'Tony González',
+  handle: '@tonysinpauta2888',
+  id: 'UCaLGIWWQ2pX-nJCvwbhYknQ',
+  url: 'https://www.youtube.com/@tonysinpauta2888',
+  videosUrl: 'https://www.youtube.com/@tonysinpauta2888/videos',
+  streamsUrl: 'https://www.youtube.com/@tonysinpauta2888/streams',
+  subscribeUrl: 'https://www.youtube.com/@tonysinpauta2888?sub_confirmation=1',
+} as const;
+
+/** Public channel numbers as of 2026-11-25; written as floors so they stay true as the channel grows. */
+export const STATS = [
+  { value: '246+', label: 'videos' },
+  { value: '104K+', label: 'vistas' },
+  { value: '600+', label: 'suscriptores' },
+  { value: 'Desde 2022', label: 'en YouTube' },
+] as const;
+
+const PHONE_DIGITS = '9145126681';
+
+export const CONTACT = {
+  phoneDisplay: '(914) 512-6681',
+  phoneHref: `tel:+1${PHONE_DIGITS}`,
+  whatsappHref: `https://wa.me/1${PHONE_DIGITS}?text=${encodeURIComponent('¡Saludos, Tony! Te escribo desde tonysinpauta.com.')}`,
+} as const;
+
+export const NAV = [
+  { href: '#videos', label: 'Videos' },
+  { href: '#entrevistas', label: 'Entrevistas' },
+  { href: '#sobre-tony', label: 'Sobre Tony' },
+  { href: '#en-vivo', label: 'En vivo' },
+  { href: '#contrataciones', label: 'Contrataciones' },
+] as const;
+
+/** Names taken from the channel's own uploads (interviews and artist promos). */
+export const ON_THE_CHANNEL = [
+  'Alfredo López',
+  'L Manuel',
+  'Daniel Monción',
+  "Luis D' La Vega",
+  'Luis Javier',
+  'Jassiell',
+  'Marino Arias',
+  'Juan Ariel',
+  'El Gringo de la Bachata',
+  'Frank Martinez',
+] as const;
