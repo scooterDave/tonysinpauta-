@@ -3,8 +3,7 @@
 Official static website for **Tony Sin Pauta** ("Tu Show Nocturno", host Tony González, YouTube `@tonysinpauta2888`).
 Spanish-only, dark **Nocturno Broadcast** theme, **$0/month** on GitHub Pages.
 
-- Preview: `https://scooterdave.github.io/tonysinpauta-/` (repo `scooterDave/tonysinpauta-`, default branch `main`)
-- Production (later): `https://tonysinpauta.com/`
+- Production: `https://tonysinpauta.com/` (repo `scooterDave/tonysinpauta-`, default branch `main`, GitHub Pages custom domain)
 
 This file is a table of contents, not an encyclopedia. Follow the links for detail.
 
@@ -27,7 +26,7 @@ This file is a table of contents, not an encyclopedia. Follow the links for deta
 4. `npm ci && npm run verify:fast` for a clean baseline before editing.
 
 ## 3. Non-negotiable invariants
-1. **Base path:** every internal URL goes through `withBase()` / `absoluteUrl()` (`src/lib/paths.ts`) or Astro assets. Never hardcode `/…` links. `site` and `base` come from `SITE_URL` in `astro.config.mjs`; switching to the custom domain is the one-line default change there (CI follows the Pages URL automatically).
+1. **Base path:** every internal URL goes through `withBase()` / `absoluteUrl()` (`src/lib/paths.ts`) or Astro assets. Never hardcode `/…` links. `site` and `base` come from `SITE_URL` in `astro.config.mjs` (default `https://tonysinpauta.com/`, base `/`; CI follows the Pages URL automatically).
 2. **Tokens only:** colour, font-size, font-weight and spacing in CSS must use custom properties from `tokens.css`. Stylelint blocks raw values elsewhere.
 3. **$0 and static only:** no paid APIs, keys, databases or server runtime. YouTube embeds stay click-to-load facades (`LiteYouTube`), using `youtube-nocookie.com`.
 4. **Facts only:** copy is natural Dominican/Latino Spanish and uses only facts from the brand brief. Schedule wording stays non-committal until Tony confirms it. Stats are written as floors (`246+`).
@@ -36,7 +35,7 @@ This file is a table of contents, not an encyclopedia. Follow the links for deta
 7. **Ownership:** one writer per worktree/branch; edit only your task's `ownedPaths`. Independent QA never self-approves its own builds.
 
 ## 4. Commands
-- `npm run dev` — dev server (`http://localhost:4321/tonysinpauta-/`; pass `-- --port <n>` in parallel worktrees).
+- `npm run dev` — dev server (`http://localhost:4321/`; pass `-- --port <n>` in parallel worktrees).
 - `npm run build` — static build to `dist/`. `npm run preview` — serve `dist/`.
 - `npm run verify:fast` — `astro check` + Stylelint token lint + build (Tier 1).
 - `npm run videos:refresh` — refresh `src/data/videos-fallback.json` from the live feed, then commit it.

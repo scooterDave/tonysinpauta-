@@ -35,10 +35,11 @@ jobs:
       - run: npm ci
 
       - name: Typecheck, token lint and build
-        run: npm run verify:fast
+        # Follows the repo's Pages URL, so a custom domain set in Settings → Pages is picked up automatically.
+        # Pages reports a custom domain as http:// until "Enforce HTTPS" is ticked; canonical URLs must stay https.
+        run: SITE_URL="https://${PAGES_BASE_URL#*://}/" npm run verify:fast
         env:
-          # Follows the repo's Pages URL, so a custom domain set in Settings → Pages is picked up automatically.
-          SITE_URL: ${{ steps.pages.outputs.base_url }}/
+          PAGES_BASE_URL: ${{ steps.pages.outputs.base_url }}
 
       - uses: actions/upload-pages-artifact@v5
         with:

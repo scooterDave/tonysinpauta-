@@ -2,8 +2,7 @@
 
 Static Astro site for **Tony Sin Pauta, Tu Show Nocturno** (Spanish-only), hosted free on GitHub Pages.
 
-- Preview: https://scooterdave.github.io/tonysinpauta-/
-- Custom domain (later): https://tonysinpauta.com/
+- Live: https://tonysinpauta.com/ (`www` redirects here)
 
 ## Development
 
@@ -11,7 +10,7 @@ Requires Node 22.23.4 or newer (`.nvmrc`).
 
 ```bash
 npm ci
-npm run dev           # http://localhost:4321/tonysinpauta-/
+npm run dev           # http://localhost:4321/
 npm run verify:fast   # typecheck + token lint + build
 ```
 
@@ -23,9 +22,8 @@ The latest videos come from the channel's public YouTube feed at build time. If 
 
 ## Custom domain
 
-1. Add `tonysinpauta.com` under **Settings → Pages → Custom domain** and set the DNS records GitHub shows.
-2. Change the default `SITE_URL` in `astro.config.mjs` to `'https://tonysinpauta.com/'` (CI already follows the Pages URL; this keeps local builds in sync).
+`tonysinpauta.com` is set under **Settings → Pages → Custom domain** (DNS at Porkbun: apex A records to GitHub Pages, `www` CNAME to `scooterdave.github.io`). The default `SITE_URL` in `astro.config.mjs` is `'https://tonysinpauta.com/'`; CI follows the Pages URL.
 
-Preview builds on `*.github.io` are marked `noindex`; the custom-domain build is indexable.
+Builds for a `*.github.io` URL are marked `noindex`; the custom-domain build is indexable.
 
 See `AGENTS.md` for the contributor/agent guide.
