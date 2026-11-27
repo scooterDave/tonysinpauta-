@@ -14,10 +14,10 @@ const { label, items } = Astro.props;
   <div class="ticker__viewport">
     <div class="ticker__track">
       <ul role="list" class="ticker__list">
-        {items.map((item) => <li>{item}</li>)}
+        {items.map((item) => <Fragment><li>{item}</li>{' '}</Fragment>)}
       </ul>
       <ul role="list" class="ticker__list" aria-hidden="true">
-        {items.map((item) => <li>{item}</li>)}
+        {items.map((item) => <Fragment><li>{item}</li>{' '}</Fragment>)}
       </ul>
     </div>
   </div>

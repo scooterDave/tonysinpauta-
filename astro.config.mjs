@@ -14,4 +14,5 @@ export default defineConfig({
     inlineStylesheets: 'always',
   },
   devToolbar: { enabled: false },
+  compressHTML: false,
 });

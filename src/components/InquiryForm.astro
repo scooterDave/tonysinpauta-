@@ -54,7 +54,7 @@ const f = (name: string) => `${id}-${name}`;
       <label for={f('tipo')}>Tipo de consulta <span class="field__req" aria-hidden="true">*</span></label>
       <select id={f('tipo')} name="tipo" required>
         <option value="" selected={!defaultType}>Elige una opción</option>
-        {INQUIRY_TYPES.map((type) => <option selected={type === defaultType}>{type}</option>)}
+        {INQUIRY_TYPES.map((type) => <Fragment><option selected={type === defaultType}>{type}</option>{' '}</Fragment>)}
       </select>
     </div>
     <div class="field field--wide">
@@ -75,10 +75,9 @@ const f = (name: string) => `${id}-${name}`;
       <span class="inquiry__label-email"><Icon name="send" /> Enviar mensaje</span>
     </button>
     <p class="inquiry__note">
-      <span class="inquiry__label-wa">Se abre WhatsApp con tu mensaje listo para enviárselo a Tony.</span>
-      <span class="inquiry__label-email">Tu mensaje le llega a Tony por correo.</span>{' '}
-      Los campos con * son obligatorios.
-    </p>
+      <span class="inquiry__label-wa">Se abre WhatsApp con tu mensaje listo para enviárselo a Tony.</span><span
+        class="inquiry__label-email"> Tu mensaje le llega a Tony por correo.</span>{' '}
+      Los campos con * son obligatorios.</p>
   </div>
   <p class="inquiry__status" role="status" data-status></p>
   <noscript>

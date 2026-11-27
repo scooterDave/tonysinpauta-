@@ -33,7 +33,7 @@ const cards = events.map((event) => {
         desde donde esté.
       </SectionHeading>
       <ul class="live__chips" role="list">
-        {INGREDIENTS.map((item) => <li>{item}</li>)}
+        {INGREDIENTS.map((item) => <Fragment><li>{item}</li>{' '}</Fragment>)}
       </ul>
     </div>
 

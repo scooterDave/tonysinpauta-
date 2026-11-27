@@ -74,3 +74,13 @@ between start and start+3h; no-JS shows "Fecha por anunciar". Empty state cites 
 y domingos 9:00 PM ET) as past promotion, pending Tony's confirmation. Deploy cron now every 4 hours.
 Verified with throwaway builds: NASA channel (real scheduled launch, 15:25Z -> 10:25 AM ET) and manual entries in
 December/July (DST correct); browser clock tests for upcoming/live/ended/ended-while-open/no-JS, axe clean.
+
+2026-11-27 | text-spacing | bc-b42fd7d9 (frontend worker)
+Page text no longer runs words together ("246+videos", "Tony GonzálezHost y productor", "01Videos", ticker names…):
+astro.config.mjs sets compressHTML: false so source whitespace between elements survives, plus explicit spaces after
+mapped <li>/<option> items (Ticker, LiveShow, InquiryForm). Hidden link suffixes now read "(entrevista con <guest>)"
+and "(<package>)" instead of ": …" (Chrome had named them "YouTube : …" / "Consultar : …"). The inquiry note keeps its
+single rendered space next to "Los campos" (the email-only variant carries its own leading space). Full-page screenshots
+of /, /kit-de-medios/ and /404.html at 390px and 1440px, the open mobile menu and the form's email mode are
+pixel-identical (0 differing pixels) to a6d2df2 built the same way. HTML +7 KB raw / +0.7 KB gzipped. Gates: verify:fast exit 0;
+390px + 1440px: 0 console errors, axe 0, no overflow, initial bytes 302 KB / 410 KB.
