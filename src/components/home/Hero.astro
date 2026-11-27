@@ -6,7 +6,6 @@ import Icon from '../Icon.astro';
 import Skyline from '../Skyline.astro';
 import { CHANNEL, STATS } from '../../data/site';
 
-const heroStats = STATS.filter((s) => s.label !== 'suscriptores');
 ---
 
 <section class="hero" id="inicio" aria-labelledby="hero-title">
@@ -43,7 +42,7 @@ const heroStats = STATS.filter((s) => s.label !== 'suscriptores');
       </div>
       <ul class="hero__stats" role="list">
         {
-          heroStats.map((stat) => (
+          STATS.map((stat) => (
             <li>
               <strong>{stat.value}</strong>
               <span>{stat.label}</span>

@@ -1,10 +1,10 @@
 ---
 import LiteYouTube from './LiteYouTube.astro';
-import { formatDate, formatViews } from '../lib/format';
+import { formatDate } from '../lib/format';
 import type { ChannelVideo } from '../lib/youtube-feed';
 
 interface Props {
-  video: Pick<ChannelVideo, 'id' | 'title' | 'aspect'> & Partial<Pick<ChannelVideo, 'published' | 'views' | 'isShort'>>;
+  video: Pick<ChannelVideo, 'id' | 'title' | 'aspect'> & Partial<Pick<ChannelVideo, 'published' | 'isShort'>>;
   badge?: string;
   sizes?: string;
   headingLevel?: 'h3' | 'h4';
@@ -12,7 +12,6 @@ interface Props {
 
 const { video, sizes, headingLevel: Heading = 'h3' } = Astro.props;
 const badge = Astro.props.badge ?? (video.isShort ? 'Short' : undefined);
-const views = formatViews(video.views ?? null);
 ---
 
 <article class="vcard">
@@ -20,11 +19,10 @@ const views = formatViews(video.views ?? null);
   <div class="vcard__body">
     <Heading class="vcard__title">{video.title}</Heading>
     {
-      (video.published || views || badge) && (
+      (video.published || badge) && (
         <p class="vcard__meta">
           {badge && <span class="vcard__badge">{badge}</span>}
           {video.published && <time datetime={video.published}>{formatDate(video.published)}</time>}
-          {views && <span>{views}</span>}
         </p>
       )
     }

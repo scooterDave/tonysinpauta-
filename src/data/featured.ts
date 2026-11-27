@@ -9,8 +9,8 @@ export interface Interview {
   headline: string;
   /** Title as published on YouTube (used for the player's accessible name). */
   youtubeTitle: string;
-  /** Public view count floor as of 2026-11-25. */
-  views: string;
+  /** Public view count floor as of 2026-11-25; only set where the number helps (see STATS in site.ts). */
+  views?: string;
   image: ImageMetadata;
 }
 
@@ -28,7 +28,6 @@ export const INTERVIEWS: Interview[] = [
     guest: 'L Manuel',
     headline: '“Me robaron mi canción”',
     youtubeTitle: 'L Manuel - Tony Sin Pauta: Me robaron mi canción',
-    views: '+4.7 mil vistas',
     image: lManuel,
   },
   {
@@ -36,7 +35,6 @@ export const INTERVIEWS: Interview[] = [
     guest: 'Daniel Monción',
     headline: '“Los bachateros le deben su fortuna”',
     youtubeTitle: 'Tony Sin Pauta - Daniel Monción dice los bachateros le deben su fortuna',
-    views: '+1.2 mil vistas',
     image: danielMoncion,
   },
 ];

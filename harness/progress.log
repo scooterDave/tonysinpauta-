@@ -40,3 +40,12 @@ Tony's own videos). Desktop tracklist panel now sizes to its content instead of 
 Poster capped at the 640px sddefault WebP: the playlist's first maxresdefault is 348 KB and pushed desktop initial
 bytes to 670 KB; now 403 KB desktop / 296 KB mobile (budget 500 KB). Gates: verify:fast exit 0; 390px + 1440px:
 0 console errors, 0 overflow, 0 broken images, axe WCAG 2.2 AA 0 violations, no iframe before scroll.
+
+2026-11-27 | stats-a11y-cleanup | bc-b42fd7d9 (frontend worker)
+Removed small numbers: the 600+ subscriber stat and every per-video view count (latest-video cards, L Manuel +4.7 mil,
+Daniel Monción +1.2 mil; formatViews deleted). Kept 104K+ vistas (now first in STATS, full-width lead in About) and
+Alfredo López's +38 mil vistas (now gold). No counts were in meta/OG/JSON-LD or the OG image. Thumbnails now carry the
+video title as alt (LiteYouTube, Sin Pauta TV poster and tracklist); link/button names read "Reproducir: <title>" with no
+repeat (sr-only title copy removed; tracklist's visible title aria-hidden). Blurred backdrop copies of vertical-clip
+thumbnails stay alt="". Ticker duplicate already had aria-hidden="true". "Sin Pauta TV" and the now-playing title are
+separated by a space in the source. Gates: verify:fast exit 0; 390px + 1440px: 0 console errors, axe 0, no overflow.

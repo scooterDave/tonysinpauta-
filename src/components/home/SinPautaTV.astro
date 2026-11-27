@@ -33,6 +33,7 @@ const posterSrcset = first
         <div class="tv__screen" data-tv-screen>
           <div class="tv__mount" data-tv-mount></div>
           <button class="tv__poster" type="button" data-tv-poster>
+            <span class="sr-only">{first ? 'Reproducir Sin Pauta TV: ' : 'Reproducir Sin Pauta TV'}</span>
             {
               first && (
                 <img
@@ -40,7 +41,7 @@ const posterSrcset = first
                   src={ytThumb(first.id, 'hqdefault')}
                   srcset={posterSrcset}
                   sizes="(min-width: 64rem) 46rem, 92vw"
-                  alt=""
+                  alt={first.title}
                   width="480"
                   height="360"
                   loading="lazy"
@@ -49,7 +50,6 @@ const posterSrcset = first
               )
             }
             <span class="tv__poster-play" aria-hidden="true"><Icon name="play" /></span>
-            <span class="sr-only">Reproducir Sin Pauta TV</span>
           </button>
           <button class="tv__unmute" type="button" data-tv-unmute hidden>
             <Icon name="volume-on" />
@@ -59,7 +59,7 @@ const posterSrcset = first
 
         <div class="tv__bar">
           <p class="tv__now">
-            <span class="tv__tag"><span class="tv__dot" aria-hidden="true"></span>Sin Pauta TV</span>
+            <span class="tv__tag"><span class="tv__dot" aria-hidden="true"></span>Sin Pauta TV</span>{' '}
             <span class="tv__now-title" data-tv-now aria-live="polite">{first?.title ?? CHANNEL.name}</span>
           </p>
           <div class="tv__controls" role="group" aria-label="Controles de Sin Pauta TV">
@@ -92,18 +92,19 @@ const posterSrcset = first
               {tracks.map((track, i) => (
                 <li>
                   <button class="tv__track" type="button" data-tv-track={track.id} data-index={i} data-title={track.title}>
+                    <span class="sr-only">Reproducir: </span>
                     <img
                       class="tv__thumb"
                       src={ytThumb(track.id, 'mqdefault')}
-                      alt=""
+                      alt={track.title}
                       width="320"
                       height="180"
                       loading="lazy"
                       decoding="async"
                     />
                     <span class="tv__track-text">
-                      <span class="tv__track-title">
-                        <span class="sr-only">Reproducir: </span>
+                      {/* Already named by the thumbnail's alt text; hidden so screen readers don't read it twice. */}
+                      <span class="tv__track-title" aria-hidden="true">
                         {track.title}
                       </span>
                       <span class="tv__track-meta">

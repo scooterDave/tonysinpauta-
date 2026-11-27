@@ -16,11 +16,13 @@ export const CHANNEL = {
  */
 export const SIN_PAUTA_TV_PLAYLIST_ID = 'PLDrx9JTRMM-A';
 
-/** Public channel numbers as of 2026-11-25; written as floors so they stay true as the channel grows. */
+/**
+ * Public channel numbers as of 2026-11-25; written as floors so they stay true as the channel grows.
+ * Small counts (subscribers, per-video views) stay off the site; only the totals that read as momentum are shown.
+ */
 export const STATS = [
-  { value: '246+', label: 'videos' },
   { value: '104K+', label: 'vistas' },
-  { value: '600+', label: 'suscriptores' },
+  { value: '246+', label: 'videos' },
   { value: 'Desde 2022', label: 'en YouTube' },
 ] as const;
 

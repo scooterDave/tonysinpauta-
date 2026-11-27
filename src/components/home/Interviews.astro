@@ -27,7 +27,7 @@ import { watchUrl } from '../../lib/format';
               <p class="icard__guest kicker">{item.guest}</p>
               <h3 class="icard__headline">{item.headline}</h3>
               <p class="icard__foot">
-                <span class="icard__views">{item.views}</span>
+                {item.views && <span class="icard__views">{item.views}</span>}
                 <a class="text-link" href={watchUrl(item.id)}>
                   YouTube
                   <Icon name="external" />
@@ -93,7 +93,7 @@ import { watchUrl } from '../../lib/format';
     font-family: var(--font-mono);
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-bold);
-    color: var(--text-primary);
+    color: var(--brand-gold);
   }
 
   @media (min-width: 48rem) {

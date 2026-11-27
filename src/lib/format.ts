@@ -7,11 +7,6 @@ const dateFormat = new Intl.DateTimeFormat('es', {
 
 export const formatDate = (iso: string) => dateFormat.format(new Date(iso)).replace('.', '');
 
-export function formatViews(views: number | null): string | null {
-  if (views === null) return null;
-  return views === 1 ? '1 vista' : `${new Intl.NumberFormat('es').format(views)} vistas`;
-}
-
 export const watchUrl = (id: string) => `https://www.youtube.com/watch?v=${id}`;
 
 export const ytThumb = (

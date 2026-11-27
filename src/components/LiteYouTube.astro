@@ -45,6 +45,7 @@ const srcset = [`${ytThumb(id, 'mqdefault')} 320w`, `${hq} 480w`, largeThumb && 
   style={framed ? `--content-aspect: ${aspect}` : undefined}
 >
   <a class="yt__link" href={watchUrl(id)} data-yt-play>
+    <span class="sr-only">Reproducir: </span>
     {framed && <img class="yt__backdrop" src={hq} alt="" width="480" height="360" loading={loading} decoding="async" />}
     <span class="yt__frame">
       {
@@ -52,7 +53,7 @@ const srcset = [`${ytThumb(id, 'mqdefault')} 320w`, `${hq} 480w`, largeThumb && 
           <Image
             class="yt__thumb"
             src={image}
-            alt=""
+            alt={title}
             widths={[360, 640, 960, 1280]}
             sizes={sizes}
             loading={loading}
@@ -64,7 +65,7 @@ const srcset = [`${ytThumb(id, 'mqdefault')} 320w`, `${hq} 480w`, largeThumb && 
             src={hq}
             srcset={srcset}
             sizes={sizes}
-            alt=""
+            alt={title}
             width="480"
             height="360"
             loading={loading}
@@ -74,7 +75,6 @@ const srcset = [`${ytThumb(id, 'mqdefault')} 320w`, `${hq} 480w`, largeThumb && 
       }
     </span>
     <span class="yt__play" aria-hidden="true"><Icon name="play" /></span>
-    <span class="sr-only">Reproducir: {title}</span>
   </a>
 </div>
 
