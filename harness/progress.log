@@ -29,3 +29,14 @@ a bot" (error 150). Verified instead (a) against real YouTube: YouTube reports m
 after tapping sound, playlist index advances on next/prev/track tap; (b) with a local stub of the IFrame API playing a
 real clip: autoplay muted, unmute, auto-advance at video end, prev/next, track tap, pause, keyboard, scroll-away pause,
 reduced-motion tap-to-play. Open: Tony to create a dedicated playlist; many uploads are titled just "Tony".
+
+2026-11-27 | sin-pauta-tv-playlist | bc-b42fd7d9 (frontend worker)
+Sin Pauta TV now plays Tony's "tonysinpauta.com website" playlist: SIN_PAUTA_TV_PLAYLIST_ID = PLDrx9JTRMM-A
+(src/data/site.ts); playlist-fallback.json refreshed (2 tracks: Luis Javier "En Esta Navidad", Juan Ariel "Yo Soy Tu
+Marca", both from the artists' own channels and embeddable). The short ID works with the playlist RSS feed, oEmbed and
+the IFrame API (player reports the 2-video playlist; next at the last track and previous at the first wrap around).
+The latest-videos shelf is back with 6 of Tony's uploads. Lede now "La selección de Tony…" (the playlist is not
+Tony's own videos). Desktop tracklist panel now sizes to its content instead of stretching to the player height.
+Poster capped at the 640px sddefault WebP: the playlist's first maxresdefault is 348 KB and pushed desktop initial
+bytes to 670 KB; now 403 KB desktop / 296 KB mobile (budget 500 KB). Gates: verify:fast exit 0; 390px + 1440px:
+0 console errors, 0 overflow, 0 broken images, axe WCAG 2.2 AA 0 violations, no iframe before scroll.

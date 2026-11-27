@@ -11,10 +11,10 @@ export const CHANNEL = {
 } as const;
 
 /**
- * Sin Pauta TV player source. Swap in the ID of Tony's own playlist (the `list=` value of its YouTube URL)
- * and run `npm run playlist:refresh`. `UU…` is the channel's automatic uploads playlist.
+ * Sin Pauta TV player source: Tony's "tonysinpauta.com website" playlist (the `list=` value of its YouTube URL).
+ * After changing it, run `npm run playlist:refresh`. The channel's automatic uploads playlist is `UUaLGIWWQ2pX-nJCvwbhYknQ`.
  */
-export const SIN_PAUTA_TV_PLAYLIST_ID = 'UUaLGIWWQ2pX-nJCvwbhYknQ';
+export const SIN_PAUTA_TV_PLAYLIST_ID = 'PLDrx9JTRMM-A';
 
 /** Public channel numbers as of 2026-11-25; written as floors so they stay true as the channel grows. */
 export const STATS = [

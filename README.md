@@ -16,7 +16,7 @@ npm run verify:fast   # typecheck + token lint + build
 
 The latest videos come from the channel's public YouTube feed at build time. If the feed is down, the build uses `src/data/videos-fallback.json`; refresh it with `npm run videos:refresh`.
 
-The Sin Pauta TV player below the hero plays one YouTube playlist, set by `SIN_PAUTA_TV_PLAYLIST_ID` in `src/data/site.ts` (default: the channel's uploads playlist). Its tracklist is read from the playlist feed at build time with `src/data/playlist-fallback.json` as the fallback; after changing the ID, run `npm run playlist:refresh` and commit the result.
+The Sin Pauta TV player below the hero plays one YouTube playlist, set by `SIN_PAUTA_TV_PLAYLIST_ID` in `src/data/site.ts` (currently Tony's "tonysinpauta.com website" playlist, `PLDrx9JTRMM-A`). Its tracklist is read from the playlist feed at build time with `src/data/playlist-fallback.json` as the fallback; after changing the ID, run `npm run playlist:refresh` and commit the result.
 
 ## Deploy
 

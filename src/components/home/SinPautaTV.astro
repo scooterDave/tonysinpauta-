@@ -9,12 +9,13 @@ const { playlistId, tracks } = await getSinPautaTvPlaylist();
 const first = tracks[0];
 const playlistUrl = `https://www.youtube.com/playlist?list=${playlistId}`;
 
-const maxres = first && ytThumb(first.id, 'maxresdefault');
+// maxresdefault stills can run past 300 KB, which would break the initial transfer budget.
+const sd = first && ytThumb(first.id, 'sddefault', 'webp');
 const posterSrcset = first
   ? [
       `${ytThumb(first.id, 'mqdefault')} 320w`,
       `${ytThumb(first.id, 'hqdefault')} 480w`,
-      (await thumbExists(maxres)) && `${maxres} 1280w`,
+      (await thumbExists(sd)) && `${sd} 640w`,
     ]
       .filter(Boolean)
       .join(', ')
@@ -24,7 +25,7 @@ const posterSrcset = first
 <section class="section tv" id="videos" aria-labelledby="tv-title" data-tv data-playlist={playlistId}>
   <div class="container">
     <SectionHeading id="tv-title" number="01" kicker="Sin Pauta TV" title="Dale play y déjalo correr">
-      Los videos de Tony, uno detrás del otro y sin salir de la página. Arranca sin sonido: toca para escuchar.
+      La selección de Tony, un video detrás del otro y sin salir de la página. Arranca sin sonido: toca para escuchar.
     </SectionHeading>
 
     <div class="tv__console">
@@ -561,6 +562,8 @@ const posterSrcset = first
 
     /* The player sets the row height; the tracklist scrolls inside it instead of stretching the row. */
     .tv__side {
+      grid-template-rows: auto minmax(0, max-content) auto;
+      align-content: start;
       contain: size;
     }
 

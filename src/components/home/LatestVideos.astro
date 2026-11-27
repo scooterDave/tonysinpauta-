@@ -7,7 +7,7 @@ import { getSinPautaTvPlaylist } from '../../lib/playlist';
 import { getLatestVideos } from '../../lib/videos';
 
 // Sin Pauta TV already plays everything in its tracklist; this shelf only shows uploads it doesn't list,
-// so it stays hidden while the player runs on the channel's uploads playlist.
+// so it stays hidden whenever the player runs on the channel's uploads playlist.
 const [{ videos }, { tracks }] = await Promise.all([getLatestVideos(), getSinPautaTvPlaylist()]);
 const inPlayer = new Set(tracks.map((t) => t.id));
 const fresh = videos.filter((v) => !inPlayer.has(v.id)).slice(0, 6);

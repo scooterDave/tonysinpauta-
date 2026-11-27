@@ -14,8 +14,11 @@ export function formatViews(views: number | null): string | null {
 
 export const watchUrl = (id: string) => `https://www.youtube.com/watch?v=${id}`;
 
-export const ytThumb = (id: string, size: 'mqdefault' | 'hqdefault' | 'sddefault' | 'maxresdefault') =>
-  `https://i.ytimg.com/vi/${id}/${size}.jpg`;
+export const ytThumb = (
+  id: string,
+  size: 'mqdefault' | 'hqdefault' | 'sddefault' | 'maxresdefault',
+  format: 'jpg' | 'webp' = 'jpg',
+) => (format === 'webp' ? `https://i.ytimg.com/vi_webp/${id}/${size}.webp` : `https://i.ytimg.com/vi/${id}/${size}.jpg`);
 
 const probes = new Map<string, Promise<boolean>>();
 
