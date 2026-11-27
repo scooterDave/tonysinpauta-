@@ -28,10 +28,25 @@ export const STATS = [
 
 const PHONE_DIGITS = '9145126681';
 
+/** Booking email, shown on the site. Set to '' to hide it everywhere. */
+const EMAIL = 'contacto@tonysinpauta.com';
+
+/**
+ * The inquiry form sends through FormSubmit (https://formsubmit.co, free, no account) only after its one-time
+ * activation link, emailed to EMAIL, has been tapped. Until then it opens WhatsApp with the filled-in fields.
+ * Activation steps: README → "Formulario de contacto".
+ */
+const FORM_ACTIVATED = false;
+
 export const CONTACT = {
   phoneDisplay: '(914) 512-6681',
   phoneHref: `tel:+1${PHONE_DIGITS}`,
+  whatsappNumber: `1${PHONE_DIGITS}`,
   whatsappHref: `https://wa.me/1${PHONE_DIGITS}?text=${encodeURIComponent('¡Saludos, Tony! Te escribo desde tonysinpauta.com.')}`,
+  email: EMAIL,
+  emailHref: EMAIL ? `mailto:${EMAIL}` : '',
+  formEndpoint: EMAIL ? `https://formsubmit.co/ajax/${EMAIL}` : '',
+  formActivated: FORM_ACTIVATED,
 } as const;
 
 export const NAV = [

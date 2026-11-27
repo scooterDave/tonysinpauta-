@@ -16,6 +16,7 @@ This file is a table of contents, not an encyclopedia. Follow the links for deta
 - `src/data/site.ts` — channel facts, stats, phone/WhatsApp, nav, artist names. `src/data/featured.ts` — curated interviews and show clips.
 - `src/lib/youtube-feed.ts` + `src/lib/videos.ts` — build-time channel feed with fallback to `src/data/videos-fallback.json`.
 - Sin Pauta TV player (`src/components/home/SinPautaTV.astro`): playlist ID is `SIN_PAUTA_TV_PLAYLIST_ID` in `src/data/site.ts`; tracklist from `src/lib/playlist.ts` with fallback `src/data/playlist-fallback.json`.
+- Advertisers: email + form switch in `src/data/site.ts` (`EMAIL`, `FORM_ACTIVATED`), `src/components/InquiryForm.astro` (WhatsApp fallback, FormSubmit when activated; steps in `README.md`), media kit `src/pages/kit-de-medios.astro` + `src/data/media-kit.ts`.
 - `src/components/` — shared UI (`LiteYouTube`, `VideoCard`, `Header`, `Footer`, …); `src/components/home/` — page sections.
 - `scripts/` — `refresh-videos.ts` (update the fallback snapshot), `prepare-media.mjs` (rebuild brand media from `assets-src/`).
 - `.github/workflows/deploy.yml` — verify, build and deploy to GitHub Pages on push to `main`, daily, or manually.

@@ -49,3 +49,15 @@ video title as alt (LiteYouTube, Sin Pauta TV poster and tracklist); link/button
 repeat (sr-only title copy removed; tracklist's visible title aria-hidden). Blurred backdrop copies of vertical-clip
 thumbnails stay alt="". Ticker duplicate already had aria-hidden="true". "Sin Pauta TV" and the now-playing title are
 separated by a space in the source. Gates: verify:fast exit 0; 390px + 1440px: 0 console errors, axe 0, no overflow.
+
+2026-11-27 | advertiser-contact-media-kit | bc-8d4207ba (frontend worker)
+Advertiser contact: booking email contacto@tonysinpauta.com (EMAIL in src/data/site.ts; hidden everywhere if set to
+'') shown in the booking card, footer and media kit. Inquiry form (src/components/InquiryForm.astro; name, business,
+email-or-phone, inquiry type, message, `_honey` honeypot) on the home booking section and the media kit. Backend:
+FormSubmit (free, no account; one-time activation link emailed to the address). FORM_ACTIVATED=false keeps the
+WhatsApp fallback (wa.me/19145126681 with the fields as the message); `?activar-formulario` on the live site switches
+one page view to FormSubmit so Tony can trigger activation from his phone (steps in README). New page
+/kit-de-medios/ (src/pages/kit-de-medios.astro, data src/data/media-kit.ts; in sitemap, linked from booking + footer):
+public numbers only (246+ videos, 104K+ vistas, Desde 2022, +38 mil on the Alfredo López interview), audience and
+region as public facts with "Datos de audiencia por país y ciudad: a consultar", formats, 5 packages with "Precios a
+consultar". Tony to supply: audience regions/ages from YouTube Analytics, prices, confirmation of the package list.

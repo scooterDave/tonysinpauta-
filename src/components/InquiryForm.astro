@@ -1,0 +1,361 @@
+---
+import Icon from './Icon.astro';
+import { CONTACT } from '../data/site';
+
+interface Props {
+  /** Prefix for field ids, unique per page. */
+  id: string;
+  /** Inquiry type preselected in the dropdown. */
+  defaultType?: string;
+}
+
+const { id, defaultType = '' } = Astro.props;
+
+const INQUIRY_TYPES = [
+  'Anuncio o patrocinio',
+  'Promoción musical',
+  'Entrevista en el show',
+  'Contratación (host o DJ)',
+  'Otro',
+];
+
+const sendsEmail = Boolean(CONTACT.formEndpoint) && CONTACT.formActivated;
+const f = (name: string) => `${id}-${name}`;
+---
+
+<form
+  class="inquiry"
+  data-inquiry
+  data-mode={sendsEmail ? 'email' : 'whatsapp'}
+  data-endpoint={CONTACT.formEndpoint}
+  data-activated={String(CONTACT.formActivated)}
+  data-whatsapp={CONTACT.whatsappNumber}
+  action={sendsEmail ? CONTACT.formEndpoint.replace('/ajax/', '/') : undefined}
+  method="post"
+  aria-labelledby={f('title')}
+  novalidate
+>
+  <h3 class="inquiry__title" id={f('title')}>Cuéntale a Tony qué necesitas</h3>
+
+  <div class="inquiry__grid">
+    <div class="field">
+      <label for={f('nombre')}>Nombre <span class="field__req" aria-hidden="true">*</span></label>
+      <input id={f('nombre')} name="nombre" type="text" autocomplete="name" required maxlength="80" />
+    </div>
+    <div class="field">
+      <label for={f('empresa')}>Negocio o empresa <span class="field__opt">(opcional)</span></label>
+      <input id={f('empresa')} name="empresa" type="text" autocomplete="organization" maxlength="100" />
+    </div>
+    <div class="field">
+      <label for={f('contacto')}>Correo o teléfono <span class="field__req" aria-hidden="true">*</span></label>
+      <input id={f('contacto')} name="contacto" type="text" inputmode="email" autocomplete="email" required maxlength="120" />
+    </div>
+    <div class="field">
+      <label for={f('tipo')}>Tipo de consulta <span class="field__req" aria-hidden="true">*</span></label>
+      <select id={f('tipo')} name="tipo" required>
+        <option value="" selected={!defaultType}>Elige una opción</option>
+        {INQUIRY_TYPES.map((type) => <option selected={type === defaultType}>{type}</option>)}
+      </select>
+    </div>
+    <div class="field field--wide">
+      <label for={f('mensaje')}>Mensaje <span class="field__req" aria-hidden="true">*</span></label>
+      <textarea id={f('mensaje')} name="mensaje" rows="4" required maxlength="2000" placeholder="Fecha, lugar, tema o producto que quieres promocionar…"
+      ></textarea>
+    </div>
+  </div>
+
+  <div class="inquiry__trap" aria-hidden="true">
+    <label for={f('honey')}>No llenes este campo</label>
+    <input id={f('honey')} name="_honey" type="text" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <div class="inquiry__foot">
+    <button class="btn inquiry__submit" type="submit">
+      <span class="inquiry__label-wa"><Icon name="whatsapp" /> Enviar por WhatsApp</span>
+      <span class="inquiry__label-email"><Icon name="send" /> Enviar mensaje</span>
+    </button>
+    <p class="inquiry__note">
+      <span class="inquiry__label-wa">Se abre WhatsApp con tu mensaje listo para enviárselo a Tony.</span>
+      <span class="inquiry__label-email">Tu mensaje le llega a Tony por correo.</span>{' '}
+      Los campos con * son obligatorios.
+    </p>
+  </div>
+  <p class="inquiry__status" role="status" data-status></p>
+  <noscript>
+    <p class="inquiry__note">Este formulario necesita JavaScript. Escríbele por WhatsApp o llama al {CONTACT.phoneDisplay}.</p>
+  </noscript>
+</form>
+
+<style>
+  .inquiry {
+    display: grid;
+    gap: var(--space-lg);
+    padding: var(--space-lg);
+    border: var(--border-width) solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    background: var(--bg-canvas);
+    box-shadow: var(--shadow-card);
+  }
+
+  .inquiry__title {
+    font-family: var(--font-display);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: var(--tracking-display);
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .inquiry__grid {
+    display: grid;
+    gap: var(--space-md);
+  }
+
+  .field {
+    display: grid;
+    gap: var(--space-2xs);
+    min-width: 0;
+  }
+
+  .field label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .field__req {
+    color: var(--brand-gold);
+  }
+
+  .field__opt {
+    color: var(--text-secondary);
+    font-weight: var(--font-weight-regular);
+  }
+
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    min-height: 3rem;
+    padding: var(--space-sm) var(--space-md);
+    border: var(--border-width) solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+  }
+
+  .field textarea {
+    resize: vertical;
+    min-height: 7.5rem;
+  }
+
+  .field textarea::placeholder {
+    color: var(--text-secondary);
+  }
+
+  .field input:focus-visible,
+  .field select:focus-visible,
+  .field textarea:focus-visible {
+    border-color: var(--brand-gold);
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  .field input:user-invalid,
+  .field select:user-invalid,
+  .field textarea:user-invalid {
+    border-color: var(--brand-red-bright);
+  }
+
+  .inquiry__trap {
+    position: absolute;
+    left: -100vw;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .inquiry__foot {
+    display: grid;
+    gap: var(--space-sm);
+    justify-items: start;
+  }
+
+  .inquiry__submit {
+    width: 100%;
+  }
+
+  .inquiry__submit span {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
+  [data-mode='whatsapp'] .inquiry__submit {
+    background: var(--whatsapp);
+    color: var(--text-on-light);
+  }
+
+  [data-mode='whatsapp'] .inquiry__submit:hover {
+    background: var(--whatsapp-hover);
+  }
+
+  [data-mode='email'] .inquiry__submit {
+    background: var(--brand-red);
+    color: var(--text-on-brand);
+    box-shadow: var(--shadow-button);
+  }
+
+  [data-mode='email'] .inquiry__submit:hover {
+    background: var(--brand-red-hover);
+  }
+
+  .inquiry__submit:disabled {
+    cursor: progress;
+    opacity: 0.7;
+  }
+
+  [data-mode='whatsapp'] .inquiry__label-email,
+  [data-mode='email'] .inquiry__label-wa {
+    display: none;
+  }
+
+  .inquiry__note {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+  }
+
+  .inquiry__status {
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .inquiry__status:empty {
+    display: none;
+  }
+
+  .inquiry__status :global(a) {
+    color: var(--brand-gold);
+  }
+
+  @media (min-width: 40rem) {
+    .inquiry {
+      padding: var(--space-xl);
+    }
+
+    .inquiry__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .field--wide {
+      grid-column: 1 / -1;
+    }
+
+    .inquiry__submit {
+      width: auto;
+    }
+  }
+</style>
+
+<script>
+  // Lets the owner trigger FormSubmit's one-time activation email from the live site before switching it on.
+  const ACTIVATION_PARAM = 'activar-formulario';
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  function setup(form: HTMLFormElement) {
+    const endpoint = form.dataset.endpoint ?? '';
+    const activated = form.dataset.activated === 'true';
+    const testing = new URLSearchParams(location.search).has(ACTIVATION_PARAM);
+    const useEmail = Boolean(endpoint) && (activated || testing);
+    form.dataset.mode = useEmail ? 'email' : 'whatsapp';
+
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    const contact = form.elements.namedItem('contacto') as HTMLInputElement;
+    const type = form.elements.namedItem('tipo') as HTMLSelectElement;
+
+    const say = (text: string, link?: { href: string; label: string }) => {
+      status.replaceChildren(text);
+      if (!link) return;
+      const a = document.createElement('a');
+      a.href = link.href;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.textContent = link.label;
+      status.append(' ', a);
+    };
+
+    contact.addEventListener('input', () => contact.setCustomValidity(''));
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const value = contact.value.trim();
+      const isEmail = EMAIL_RE.test(value);
+      const isPhone = value.replace(/\D/g, '').length >= 7;
+      contact.setCustomValidity(isEmail || isPhone ? '' : 'Escribe un correo o un número de teléfono.');
+      if (!form.reportValidity()) return;
+
+      const data = new FormData(form);
+      const get = (name: string) => String(data.get(name) ?? '').trim();
+      if (get('_honey')) {
+        form.reset();
+        say('¡Gracias! Tony te responderá pronto.');
+        return;
+      }
+
+      const fields: [string, string][] = [
+        ['Nombre', get('nombre')],
+        ['Negocio', get('empresa')],
+        ['Contacto', value],
+        ['Consulta', type.value],
+        ['Mensaje', get('mensaje')],
+      ];
+      const text = ['¡Saludos, Tony! Te escribo desde tonysinpauta.com.', '']
+        .concat(fields.filter(([, v]) => v).map(([k, v]) => `${k}: ${v}`))
+        .join('\n');
+      const whatsappUrl = `https://wa.me/${form.dataset.whatsapp}?text=${encodeURIComponent(text)}`;
+      const whatsappLink = { href: whatsappUrl, label: 'Enviar por WhatsApp' };
+
+      if (!useEmail) {
+        const opened = window.open(whatsappUrl, '_blank');
+        if (opened) opened.opener = null;
+        else location.href = whatsappUrl;
+        say('Se abrió WhatsApp con tu mensaje. Solo falta darle a enviar.');
+        return;
+      }
+
+      submit.disabled = true;
+      say('Enviando…');
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({
+            _subject: `Consulta desde tonysinpauta.com: ${type.value}`,
+            _template: 'table',
+            nombre: get('nombre'),
+            negocio: get('empresa') || '—',
+            ...(isEmail ? { email: value } : { telefono: value }),
+            consulta: type.value,
+            mensaje: get('mensaje'),
+          }),
+        });
+        const json = (await res.json().catch(() => ({}))) as { success?: string | boolean; message?: string };
+        if (res.ok && String(json.success) === 'true') {
+          form.reset();
+          say('¡Mensaje enviado! Tony te responderá pronto.');
+        } else if (/activat/i.test(json.message ?? '')) {
+          say('El formulario todavía no está activado: revisa el correo de contacto y toca “Activate Form”. Mientras tanto:', whatsappLink);
+        } else {
+          throw new Error(json.message ?? `HTTP ${res.status}`);
+        }
+      } catch {
+        say('No se pudo enviar el mensaje. Puedes mandarlo por WhatsApp:', whatsappLink);
+      } finally {
+        submit.disabled = false;
+      }
+    });
+  }
+
+  document.querySelectorAll<HTMLFormElement>('[data-inquiry]').forEach(setup);
+</script>

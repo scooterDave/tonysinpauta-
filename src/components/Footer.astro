@@ -46,6 +46,18 @@ const year = new Date().getFullYear();
         <Icon name="phone" />
         {CONTACT.phoneDisplay}
       </a>
+      {
+        CONTACT.email && (
+          <a class="text-link" href={CONTACT.emailHref}>
+            <Icon name="mail" />
+            {CONTACT.email}
+          </a>
+        )
+      }
+      <a class="text-link" href={withBase('kit-de-medios/')}>
+        <Icon name="chart" />
+        Kit de medios para anunciantes
+      </a>
     </div>
   </div>
 
