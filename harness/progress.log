@@ -61,3 +61,16 @@ one page view to FormSubmit so Tony can trigger activation from his phone (steps
 public numbers only (246+ videos, 104K+ vistas, Desde 2022, +38 mil on the Alfredo López interview), audience and
 region as public facts with "Datos de audiencia por país y ciudad: a consultar", formats, 5 packages with "Precios a
 consultar". Tony to supply: audience regions/ages from YouTube Analytics, prices, confirmation of the package list.
+
+2026-11-27 | live-schedule | bc-66eb5446 (frontend worker)
+"Próximo en vivo" board in the live section (src/components/home/LiveShow.astro). src/lib/live-schedule.ts finds
+Tony's scheduled YouTube lives at build time with no API key: candidates from the channel's Live tab page data
+(upcoming markers) and feed entries with 0 views, each confirmed on its watch page (liveBroadcastDetails.startTimestamp
++ isUpcoming / isLiveNow, owner = channel). Upcoming streams return details even where YouTube walls normal videos.
+Failures never break the build ([live] warnings). Manual fallback PROXIMO_EN_VIVO in src/data/site.ts (null for now,
+user decision), used only when YouTube has nothing. Add-to-calendar: Google Calendar link + per-event .ics at
+/en-vivo/<slug>.ics. Events ship hidden and the page reveals only those not yet ended (minute timer); "En vivo ahora"
+between start and start+3h; no-JS shows "Fecha por anunciar". Empty state cites the flyer schedule (viernes, sábados
+y domingos 9:00 PM ET) as past promotion, pending Tony's confirmation. Deploy cron now every 4 hours.
+Verified with throwaway builds: NASA channel (real scheduled launch, 15:25Z -> 10:25 AM ET) and manual entries in
+December/July (DST correct); browser clock tests for upcoming/live/ended/ended-while-open/no-JS, axe clean.

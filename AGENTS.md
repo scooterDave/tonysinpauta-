@@ -15,11 +15,12 @@ This file is a table of contents, not an encyclopedia. Follow the links for deta
 - `src/styles/tokens.css` — single source of truth for colour, type, spacing, radii, shadows.
 - `src/data/site.ts` — channel facts, stats, phone/WhatsApp, nav, artist names. `src/data/featured.ts` — curated interviews and show clips.
 - `src/lib/youtube-feed.ts` + `src/lib/videos.ts` — build-time channel feed with fallback to `src/data/videos-fallback.json`.
+- Live schedule: `src/lib/live-schedule.ts` reads Tony's scheduled YouTube lives at build time (no API key); manual fallback `PROXIMO_EN_VIVO` in `src/data/site.ts`; per-event `.ics` files from `src/pages/en-vivo/[slug].ics.ts`.
 - Sin Pauta TV player (`src/components/home/SinPautaTV.astro`): playlist ID is `SIN_PAUTA_TV_PLAYLIST_ID` in `src/data/site.ts`; tracklist from `src/lib/playlist.ts` with fallback `src/data/playlist-fallback.json`.
 - Advertisers: email + form switch in `src/data/site.ts` (`EMAIL`, `FORM_ACTIVATED`), `src/components/InquiryForm.astro` (WhatsApp fallback, FormSubmit when activated; steps in `README.md`), media kit `src/pages/kit-de-medios.astro` + `src/data/media-kit.ts`.
 - `src/components/` — shared UI (`LiteYouTube`, `VideoCard`, `Header`, `Footer`, …); `src/components/home/` — page sections.
 - `scripts/` — `refresh-videos.ts` (update the fallback snapshot), `prepare-media.mjs` (rebuild brand media from `assets-src/`).
-- `.github/workflows/deploy.yml` — verify, build and deploy to GitHub Pages on push to `main`, daily, or manually.
+- `.github/workflows/deploy.yml` — verify, build and deploy to GitHub Pages on push to `main`, every 4 hours, or manually.
 
 ## 2. Session startup
 1. `pwd`, `git branch --show-current`, `git log -n 5 --oneline`.

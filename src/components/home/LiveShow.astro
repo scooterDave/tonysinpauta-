@@ -4,8 +4,25 @@ import SectionHeading from '../SectionHeading.astro';
 import VideoCard from '../VideoCard.astro';
 import { SHOW_CLIPS } from '../../data/featured';
 import { CHANNEL } from '../../data/site';
+import { googleCalendarUrl } from '../../lib/calendar';
+import { formatShowTime, getLiveSchedule } from '../../lib/live-schedule';
+import { withBase } from '../../lib/paths';
 
 const INGREDIENTS = ['Artistas invitados', 'Karaoke', 'Música', 'Mezclas del DJ', 'Comentarios en vivo'];
+
+const { events } = await getLiveSchedule();
+const cards = events.map((event) => {
+  const { day, time } = formatShowTime(event.start);
+  const [clock, period] = time.split(' ');
+  return {
+    ...event,
+    day,
+    clock,
+    period,
+    gcal: googleCalendarUrl(event),
+    ics: withBase(`en-vivo/${event.slug}.ics`),
+  };
+});
 ---
 
 <section class="section live" id="en-vivo" aria-labelledby="en-vivo-title">
@@ -20,26 +37,59 @@ const INGREDIENTS = ['Artistas invitados', 'Karaoke', 'Música', 'Mezclas del DJ
       </ul>
     </div>
 
-    <aside class="board" aria-labelledby="board-title">
+    <aside class="board" aria-labelledby="board-title" data-live-board>
       <h3 class="board__label kicker" id="board-title">
         <span class="board__dot" aria-hidden="true"></span>
-        La hora del show
+        <span data-live-label>Próximo en vivo</span>
       </h3>
-      <p class="board__time">9:00 <span>PM</span></p>
-      <p class="board__zone">Hora de Nueva York · ET</p>
-      <p class="board__note">
-        Los en vivo de Tony Sin Pauta han salido de noche, los fines de semana. Las próximas fechas se anuncian en el canal:
-        suscríbete y activa la campanita para que YouTube te avise.
-      </p>
-      <div class="board__actions">
-        <a class="btn btn--primary" href={CHANNEL.subscribeUrl}>
-          <Icon name="bell" />
-          Activar avisos en YouTube
-        </a>
-        <a class="text-link" href={CHANNEL.streamsUrl}>
-          Ver transmisiones anteriores
-          <Icon name="arrow" />
-        </a>
+
+      {
+        cards.map((card) => (
+          <article class="board__event" data-live-event data-start={card.start} data-end={card.end} hidden>
+            <p class="board__day">{card.day}</p>
+            <p class="board__time">
+              {card.clock} <span>{card.period}</span>
+            </p>
+            <p class="board__zone">Hora de Nueva York · ET</p>
+            <h4 class="board__title">{card.title}</h4>
+            <div class="board__actions">
+              <a class="btn btn--primary" href={card.url}>
+                <Icon name="youtube" />
+                <span class="board__when-upcoming">{card.source === 'youtube' ? 'Ver en YouTube' : 'Ir al canal'}</span>
+                <span class="board__when-live">Ver ahora en vivo</span>
+              </a>
+              <div class="board__cal">
+                <a class="btn btn--ghost btn--sm" href={card.gcal}>
+                  <Icon name="calendar" />
+                  Google Calendar
+                </a>
+                <a class="btn btn--ghost btn--sm" href={card.ics} download="tony-sin-pauta-en-vivo.ics">
+                  <Icon name="calendar" />
+                  Descargar .ics
+                </a>
+              </div>
+            </div>
+          </article>
+        ))
+      }
+
+      <div class="board__empty" data-live-empty>
+        <p class="board__tba">Fecha por anunciar</p>
+        <p class="board__lede">Cuando Tony programe su próximo en vivo en YouTube, la fecha aparece aquí sola.</p>
+        <p class="board__note">
+          En sus flyers, el show se ha anunciado los viernes, sábados y domingos a las 9:00 PM, hora de Nueva York.
+          Suscríbete y activa la campanita para que YouTube te avise.
+        </p>
+        <div class="board__actions">
+          <a class="btn btn--primary" href={CHANNEL.subscribeUrl}>
+            <Icon name="bell" />
+            Activar avisos en YouTube
+          </a>
+          <a class="text-link" href={CHANNEL.streamsUrl}>
+            Ver transmisiones anteriores
+            <Icon name="arrow" />
+          </a>
+        </div>
       </div>
     </aside>
   </div>
@@ -127,12 +177,41 @@ const INGREDIENTS = ['Artistas invitados', 'Karaoke', 'Música', 'Mezclas del DJ
     box-shadow: var(--shadow-live-dot);
   }
 
+  .board__event,
+  .board__empty {
+    display: grid;
+    gap: var(--space-sm);
+  }
+
+  .board__event[hidden],
+  .board__empty[hidden] {
+    display: none;
+  }
+
+  .board__event + .board__event {
+    padding-top: var(--space-md);
+    border-top: var(--border-width) dashed var(--border-strong);
+  }
+
+  .board__day {
+    font-family: var(--font-display);
+    font-size: var(--font-size-2xl);
+    letter-spacing: var(--tracking-display);
+    line-height: 1;
+    text-transform: uppercase;
+    color: var(--brand-gold);
+  }
+
   .board__time {
     font-family: var(--font-display);
     font-size: var(--font-size-display);
     letter-spacing: var(--tracking-display);
     line-height: 0.85;
     color: var(--text-primary);
+  }
+
+  .board__event + .board__event .board__time {
+    font-size: var(--font-size-3xl);
   }
 
   .board__time span {
@@ -147,8 +226,29 @@ const INGREDIENTS = ['Artistas invitados', 'Karaoke', 'Música', 'Mezclas del DJ
     color: var(--text-secondary);
   }
 
+  .board__title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+  }
+
+  .board__tba {
+    font-family: var(--font-display);
+    font-size: var(--font-size-4xl);
+    letter-spacing: var(--tracking-display);
+    line-height: 0.9;
+    text-transform: uppercase;
+    color: var(--text-primary);
+  }
+
+  .board__lede {
+    font-size: var(--font-size-lg);
+    color: var(--text-primary);
+  }
+
   .board__note {
-    margin-top: var(--space-sm);
+    margin-top: var(--space-xs);
     padding-top: var(--space-md);
     border-top: var(--border-width) dashed var(--border-strong);
     color: var(--text-secondary);
@@ -159,6 +259,21 @@ const INGREDIENTS = ['Artistas invitados', 'Karaoke', 'Música', 'Mezclas del DJ
     gap: var(--space-md);
     justify-items: start;
     margin-top: var(--space-xs);
+  }
+
+  .board__cal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  .board__when-live,
+  [data-live-now] .board__when-upcoming {
+    display: none;
+  }
+
+  [data-live-now] .board__when-live {
+    display: inline;
   }
 
   .live__subhead {
@@ -181,3 +296,29 @@ const INGREDIENTS = ['Artistas invitados', 'Karaoke', 'Música', 'Mezclas del DJ
     }
   }
 </style>
+
+<script>
+  // Build-time events ship hidden; only ones that haven't ended are revealed, so a stale build never
+  // shows a past date as upcoming.
+  const board = document.querySelector<HTMLElement>('[data-live-board]');
+  if (board) {
+    const label = board.querySelector<HTMLElement>('[data-live-label]')!;
+    const empty = board.querySelector<HTMLElement>('[data-live-empty]')!;
+    const update = () => {
+      const now = Date.now();
+      for (const event of board.querySelectorAll<HTMLElement>('[data-live-event]')) {
+        if (Date.parse(event.dataset.end ?? '') <= now) {
+          event.remove();
+          continue;
+        }
+        event.hidden = false;
+        event.toggleAttribute('data-live-now', Date.parse(event.dataset.start ?? '') <= now);
+      }
+      const next = board.querySelector<HTMLElement>('[data-live-event]');
+      empty.hidden = next !== null;
+      label.textContent = next?.hasAttribute('data-live-now') ? 'En vivo ahora' : 'Próximo en vivo';
+    };
+    update();
+    window.setInterval(update, 60_000);
+  }
+</script>

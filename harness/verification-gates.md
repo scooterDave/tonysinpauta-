@@ -170,7 +170,7 @@ Deterministic tools verify correctness, not taste. Adapted from Anthropic's 2026
 
 ## 7. Free-Tier GitHub Actions CI Blueprint (`.github/workflows/verify.yml`)
 
-> Already live: `.github/workflows/deploy.yml` runs `npm run verify:fast` before every GitHub Pages deploy (push to `main`, daily schedule, manual run). The PR workflow below is still to be added once `verify:all` exists.
+> Already live: `.github/workflows/deploy.yml` runs `npm run verify:fast` before every GitHub Pages deploy (push to `main`, every 4 hours, manual run). The PR workflow below is still to be added once `verify:all` exists.
 
 ```yaml
 name: Verify tonysinpauta.com

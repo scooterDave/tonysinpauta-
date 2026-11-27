@@ -4,8 +4,8 @@ on:
   push:
     branches: [main]
   schedule:
-    # Daily rebuild (~5 AM New York) so the Sin Pauta TV tracklist and video shelves pick up new uploads.
-    - cron: '17 10 * * *'
+    # Every 4 hours, so newly scheduled YouTube lives, the Sin Pauta TV tracklist and the video shelves stay fresh.
+    - cron: '17 */4 * * *'
   workflow_dispatch:
 
 permissions:

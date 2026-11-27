@@ -16,6 +16,25 @@ export const CHANNEL = {
  */
 export const SIN_PAUTA_TV_PLAYLIST_ID = 'PLDrx9JTRMM-A';
 
+export interface ManualLive {
+  /** Calendar date in New York, `YYYY-MM-DD`. */
+  date: string;
+  /** 24-hour start time in New York (America/New_York), `HH:MM`. */
+  time: string;
+  title: string;
+  /** Defaults to 180 (the show runs 1.5–3 hours). */
+  durationMinutes?: number;
+  /** Where to watch; defaults to the channel's live tab. */
+  url?: string;
+}
+
+/**
+ * "Próximo en vivo" set by hand. Only shown when YouTube has no scheduled live for the channel,
+ * and hidden on its own once it is over. Example:
+ * { date: '2026-12-12', time: '21:00', title: 'Tony Sin Pauta en vivo: especial navideño' }
+ */
+export const PROXIMO_EN_VIVO: ManualLive | null = null;
+
 /**
  * Public channel numbers as of 2026-11-25; written as floors so they stay true as the channel grows.
  * Small counts (subscribers, per-video views) stay off the site; only the totals that read as momentum are shown.
