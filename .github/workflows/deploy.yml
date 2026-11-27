@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
   schedule:
-    # Daily rebuild (~5 AM New York) so "Lo más reciente" picks up new uploads.
+    # Daily rebuild (~5 AM New York) so the Sin Pauta TV tracklist and video shelves pick up new uploads.
     - cron: '17 10 * * *'
   workflow_dispatch:
 

@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Ticker from '../components/Ticker.astro';
 import Hero from '../components/home/Hero.astro';
+import SinPautaTV from '../components/home/SinPautaTV.astro';
 import LatestVideos from '../components/home/LatestVideos.astro';
 import Interviews from '../components/home/Interviews.astro';
 import AboutTony from '../components/home/AboutTony.astro';
@@ -41,6 +42,7 @@ const jsonLd = {
   jsonLd={jsonLd}
 >
   <Hero />
+  <SinPautaTV />
   <Ticker label="En el canal" items={[...ON_THE_CHANNEL, 'Bachata', 'Merengue', 'Karaoke', 'Mega mezclas']} />
   <LatestVideos />
   <Interviews />

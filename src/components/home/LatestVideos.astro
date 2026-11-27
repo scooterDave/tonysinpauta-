@@ -1,149 +1,49 @@
 ---
 import Icon from '../Icon.astro';
-import LiteYouTube from '../LiteYouTube.astro';
 import SectionHeading from '../SectionHeading.astro';
 import VideoCard from '../VideoCard.astro';
 import { CHANNEL } from '../../data/site';
-import { formatDate, formatViews, thumbExists, watchUrl, ytThumb } from '../../lib/format';
+import { getSinPautaTvPlaylist } from '../../lib/playlist';
 import { getLatestVideos } from '../../lib/videos';
 
-const { videos } = await getLatestVideos();
-const featured = videos.find((v) => !v.isShort && v.aspect >= 1.6) ?? videos[0];
-const rest = videos.filter((v) => v !== featured).slice(0, 6);
-
-const maxres = ytThumb(featured.id, 'maxresdefault');
-const sd = ytThumb(featured.id, 'sddefault');
-const largeThumb = (await thumbExists(maxres))
-  ? { src: maxres, width: 1280 }
-  : (await thumbExists(sd))
-    ? { src: sd, width: 640 }
-    : undefined;
-const featuredViews = formatViews(featured.views);
+// Sin Pauta TV already plays everything in its tracklist; this shelf only shows uploads it doesn't list,
+// so it stays hidden while the player runs on the channel's uploads playlist.
+const [{ videos }, { tracks }] = await Promise.all([getLatestVideos(), getSinPautaTvPlaylist()]);
+const inPlayer = new Set(tracks.map((t) => t.id));
+const fresh = videos.filter((v) => !inPlayer.has(v.id)).slice(0, 6);
 ---
 
-<section class="section latest" id="videos" aria-labelledby="videos-title">
-  <div class="container">
-    <SectionHeading id="videos-title" number="01" kicker="Lo más reciente" title="Recién salido del canal">
-      Lo último que Tony ha subido a YouTube. Dale play aquí mismo, sin salir de la página.
-    </SectionHeading>
+{
+  fresh.length > 0 && (
+    <section class="section latest" id="recientes" aria-labelledby="recientes-title">
+      <div class="container">
+        <SectionHeading id="recientes-title" kicker="Recién subido" title="También nuevo en el canal">
+          Lo último que Tony ha subido a YouTube y que todavía no está en Sin Pauta TV.
+        </SectionHeading>
+      </div>
 
-    <article class="latest__featured">
-      <LiteYouTube
-        id={featured.id}
-        title={featured.title}
-        aspect={featured.aspect}
-        largeThumb={largeThumb}
-        size="lg"
-        sizes="(min-width: 64rem) 46rem, 92vw"
-      />
-      <div class="latest__info">
-        <p class="latest__meta">
-          <span class="latest__badge">Último video</span>
-          <time datetime={featured.published}>{formatDate(featured.published)}</time>
-        </p>
-        <h3 class="latest__title">{featured.title}</h3>
-        {featuredViews && <p class="latest__views">{featuredViews}</p>}
-        <a class="text-link" href={watchUrl(featured.id)}>
-          Ver en YouTube
-          <Icon name="external" />
+      <ul class="shelf" role="list" aria-label="Videos recientes del canal">
+        {fresh.map((video) => (
+          <li>
+            <VideoCard video={video} sizes="(min-width: 64rem) 24rem, (min-width: 48rem) 45vw, 78vw" />
+          </li>
+        ))}
+      </ul>
+
+      <div class="container latest__more">
+        <a class="btn btn--ghost" href={CHANNEL.videosUrl}>
+          <Icon name="youtube" />
+          Ver todos los videos en YouTube
         </a>
       </div>
-    </article>
-  </div>
-
-  <ul class="shelf latest__shelf" role="list" aria-label="Más videos recientes">
-    {
-      rest.map((video) => (
-        <li>
-          <VideoCard video={video} sizes="(min-width: 64rem) 24rem, (min-width: 48rem) 45vw, 78vw" />
-        </li>
-      ))
-    }
-  </ul>
-
-  <div class="container latest__more">
-    <a class="btn btn--ghost" href={CHANNEL.videosUrl}>
-      <Icon name="youtube" />
-      Ver todos los videos en YouTube
-    </a>
-  </div>
-</section>
+    </section>
+  )
+}
 
 <style>
-  .latest {
-    background: var(--gradient-section-glow);
-  }
-
-  .latest__featured {
-    display: grid;
-    gap: var(--space-lg);
-    padding: var(--space-sm);
-    border: var(--border-width) solid var(--border-subtle);
-    border-radius: var(--radius-lg);
-    background: var(--bg-surface);
-    box-shadow: var(--shadow-card);
-  }
-
-  .latest__info {
-    display: grid;
-    gap: var(--space-sm);
-    align-content: center;
-    justify-items: start;
-    padding: 0 var(--space-xs) var(--space-xs);
-  }
-
-  .latest__meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-sm);
-    font-family: var(--font-mono);
-    font-size: var(--font-size-xs);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-wide);
-    color: var(--text-secondary);
-  }
-
-  .latest__badge {
-    padding: var(--space-2xs) var(--space-xs);
-    border-radius: var(--radius-sm);
-    background: var(--brand-red);
-    color: var(--text-on-brand);
-    font-weight: var(--font-weight-bold);
-  }
-
-  .latest__title {
-    font-family: var(--font-display);
-    font-size: var(--font-size-3xl);
-    font-weight: var(--font-weight-regular);
-    letter-spacing: var(--tracking-display);
-    line-height: 0.95;
-    text-transform: uppercase;
-    text-wrap: balance;
-    overflow-wrap: anywhere;
-  }
-
-  .latest__views {
-    font-family: var(--font-mono);
-    font-size: var(--font-size-sm);
-    color: var(--brand-gold);
-  }
-
-  .latest__shelf {
-    margin-top: var(--space-xl);
-  }
-
   .latest__more {
     display: flex;
     justify-content: center;
     margin-top: var(--space-xl);
-  }
-
-  @media (min-width: 64rem) {
-    .latest__featured {
-      grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
-      gap: var(--space-xl);
-      padding: var(--space-md);
-    }
   }
 </style>

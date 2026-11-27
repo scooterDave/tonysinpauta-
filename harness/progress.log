@@ -10,3 +10,22 @@ axe WCAG 2.2 AA: 0 violations (contrast "incomplete" items are gradient backgrou
 initial transfer 182 KB mobile / 294 KB desktop. Ledger: deploy target set to GitHub Pages; T5-01 PR-preview
 criterion adapted because GitHub Pages has no per-PR previews. Open: Tony to confirm phone/WhatsApp, live
 schedule, social handles, and approve the visual direction (T1-04). verify:all (T2-03) not yet wired.
+
+2026-11-26 | sin-pauta-tv-player | bc-b42fd7d9 (frontend worker)
+Added the "Sin Pauta TV" playlist player as section 01 directly below the hero (src/components/home/SinPautaTV.astro):
+YouTube IFrame Player API on the youtube-nocookie host, Nocturno tokens, Spanish copy. API loads only when the screen
+is within 200px of the viewport; muted autoplay at 50% visibility with a "Toca para escuchar" unmute button; playsinline;
+loops the playlist; prev/play-pause/next/sound controls; tracklist (thumbnails + titles) built at build time from the
+playlist feed (src/lib/playlist.ts, fallback src/data/playlist-fallback.json, `npm run playlist:refresh`). Autoplay
+skipped for prefers-reduced-motion or Save-Data (poster play button; API loads on tap). Unengaged muted autoplay pauses
+when scrolled away and resumes on return. Playlist ID: SIN_PAUTA_TV_PLAYLIST_ID in src/data/site.ts (default uploads
+playlist UUaLGIWWQ2pX-nJCvwbhYknQ). LatestVideos lost its duplicate featured player and now only lists uploads missing
+from the tracklist, so it is hidden while the player runs on the uploads playlist; hero CTA now "Ver Sin Pauta TV".
+Section order: hero, Sin Pauta TV, ticker, interviews, ... Evidence: verify:fast exit 0; Playwright 390px + 1440px:
+0 console errors, 0 overflow, 0 broken images, 0 iframes / no iframe_api before scroll, axe WCAG 2.2 AA 0 violations;
+initial decoded bytes 260 KB mobile / 417 KB desktop (budget 500 KB). Media playback cannot be exercised from the
+agent VM: YouTube answers every embed (including the existing interview facades) with "Sign in to confirm you're not
+a bot" (error 150). Verified instead (a) against real YouTube: YouTube reports muted=true after autoplay, muted=false
+after tapping sound, playlist index advances on next/prev/track tap; (b) with a local stub of the IFrame API playing a
+real clip: autoplay muted, unmute, auto-advance at video end, prev/next, track tap, pause, keyboard, scroll-away pause,
+reduced-motion tap-to-play. Open: Tony to create a dedicated playlist; many uploads are titled just "Tony".

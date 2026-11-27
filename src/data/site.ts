@@ -10,6 +10,12 @@ export const CHANNEL = {
   subscribeUrl: 'https://www.youtube.com/@tonysinpauta2888?sub_confirmation=1',
 } as const;
 
+/**
+ * Sin Pauta TV player source. Swap in the ID of Tony's own playlist (the `list=` value of its YouTube URL)
+ * and run `npm run playlist:refresh`. `UU…` is the channel's automatic uploads playlist.
+ */
+export const SIN_PAUTA_TV_PLAYLIST_ID = 'UUaLGIWWQ2pX-nJCvwbhYknQ';
+
 /** Public channel numbers as of 2026-11-25; written as floors so they stay true as the channel grows. */
 export const STATS = [
   { value: '246+', label: 'videos' },

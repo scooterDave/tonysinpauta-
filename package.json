@@ -14,7 +14,8 @@
     "lint:css": "stylelint \"src/**/*.{css,astro}\"",
     "verify:fast": "npm run check && npm run lint:css && npm run build",
     "videos:refresh": "node scripts/refresh-videos.ts",
-    "media:prepare": "node scripts/prepare-media.mjs"
+    "media:prepare": "node scripts/prepare-media.mjs",
+    "playlist:refresh": "node scripts/refresh-playlist.ts"
   },
   "dependencies": {
     "@fontsource-variable/plus-jakarta-sans": "^5.3.0",

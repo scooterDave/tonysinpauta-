@@ -1,0 +1,799 @@
+---
+import Icon from '../Icon.astro';
+import SectionHeading from '../SectionHeading.astro';
+import { CHANNEL } from '../../data/site';
+import { formatDate, thumbExists, ytThumb } from '../../lib/format';
+import { getSinPautaTvPlaylist } from '../../lib/playlist';
+
+const { playlistId, tracks } = await getSinPautaTvPlaylist();
+const first = tracks[0];
+const playlistUrl = `https://www.youtube.com/playlist?list=${playlistId}`;
+
+const maxres = first && ytThumb(first.id, 'maxresdefault');
+const posterSrcset = first
+  ? [
+      `${ytThumb(first.id, 'mqdefault')} 320w`,
+      `${ytThumb(first.id, 'hqdefault')} 480w`,
+      (await thumbExists(maxres)) && `${maxres} 1280w`,
+    ]
+      .filter(Boolean)
+      .join(', ')
+  : undefined;
+---
+
+<section class="section tv" id="videos" aria-labelledby="tv-title" data-tv data-playlist={playlistId}>
+  <div class="container">
+    <SectionHeading id="tv-title" number="01" kicker="Sin Pauta TV" title="Dale play y déjalo correr">
+      Los videos de Tony, uno detrás del otro y sin salir de la página. Arranca sin sonido: toca para escuchar.
+    </SectionHeading>
+
+    <div class="tv__console">
+      <div class="tv__main">
+        <div class="tv__screen" data-tv-screen>
+          <div class="tv__mount" data-tv-mount></div>
+          <button class="tv__poster" type="button" data-tv-poster>
+            {
+              first && (
+                <img
+                  class="tv__poster-img"
+                  src={ytThumb(first.id, 'hqdefault')}
+                  srcset={posterSrcset}
+                  sizes="(min-width: 64rem) 46rem, 92vw"
+                  alt=""
+                  width="480"
+                  height="360"
+                  loading="lazy"
+                  decoding="async"
+                />
+              )
+            }
+            <span class="tv__poster-play" aria-hidden="true"><Icon name="play" /></span>
+            <span class="sr-only">Reproducir Sin Pauta TV</span>
+          </button>
+          <button class="tv__unmute" type="button" data-tv-unmute hidden>
+            <Icon name="volume-on" />
+            Toca para escuchar
+          </button>
+        </div>
+
+        <div class="tv__bar">
+          <p class="tv__now">
+            <span class="tv__tag"><span class="tv__dot" aria-hidden="true"></span>Sin Pauta TV</span>
+            <span class="tv__now-title" data-tv-now aria-live="polite">{first?.title ?? CHANNEL.name}</span>
+          </p>
+          <div class="tv__controls" role="group" aria-label="Controles de Sin Pauta TV">
+            <button class="tv__btn" type="button" data-tv-prev aria-label="Video anterior">
+              <Icon name="prev" />
+            </button>
+            <button class="tv__btn tv__btn--main" type="button" data-tv-toggle aria-label="Reproducir">
+              <Icon name="play" class="tv__icon-play" />
+              <Icon name="pause" class="tv__icon-pause" />
+            </button>
+            <button class="tv__btn" type="button" data-tv-next aria-label="Siguiente video">
+              <Icon name="next" />
+            </button>
+            <button class="tv__btn" type="button" data-tv-mute aria-label="Sonido" aria-pressed="false">
+              <Icon name="volume-off" class="tv__icon-muted" />
+              <Icon name="volume-on" class="tv__icon-sound" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="tv__side">
+        <p class="tv__list-head kicker">
+          <span>En la lista</span>
+          {tracks.length > 0 && <span class="tv__count">{tracks.length} videos</span>}
+        </p>
+        {
+          tracks.length > 0 && (
+            <ol class="tv__tracks" role="list" aria-label="Lista de Sin Pauta TV" data-tv-list>
+              {tracks.map((track, i) => (
+                <li>
+                  <button class="tv__track" type="button" data-tv-track={track.id} data-index={i} data-title={track.title}>
+                    <img
+                      class="tv__thumb"
+                      src={ytThumb(track.id, 'mqdefault')}
+                      alt=""
+                      width="320"
+                      height="180"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <span class="tv__track-text">
+                      <span class="tv__track-title">
+                        <span class="sr-only">Reproducir: </span>
+                        {track.title}
+                      </span>
+                      <span class="tv__track-meta">
+                        <span class="tv__track-num">{String(i + 1).padStart(2, '0')}</span>
+                        <time datetime={track.published}>{formatDate(track.published)}</time>
+                        {track.isShort && <span>Short</span>}
+                        <span class="tv__playing">Sonando</span>
+                      </span>
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ol>
+          )
+        }
+        <div class="tv__links">
+          <a class="text-link" href={playlistUrl}>
+            Ver la lista en YouTube
+            <Icon name="external" />
+          </a>
+          <a class="text-link" href={CHANNEL.videosUrl}>
+            Todos los videos del canal
+            <Icon name="external" />
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .tv {
+    background: var(--gradient-section-glow);
+  }
+
+  .tv__console {
+    display: grid;
+    gap: var(--space-lg);
+  }
+
+  .tv__main {
+    display: grid;
+    align-content: start;
+    overflow: hidden;
+    border: var(--border-width) solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    background: var(--bg-surface);
+    box-shadow: var(--shadow-monitor);
+  }
+
+  .tv__screen {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: var(--bg-canvas);
+    isolation: isolate;
+  }
+
+  .tv__mount,
+  .tv__screen :global(iframe) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .tv__poster {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: var(--bg-elevated);
+    cursor: pointer;
+  }
+
+  .tv__poster::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-card-shade);
+  }
+
+  .tv__poster-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .tv__poster-play {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 4.75rem;
+    height: 4.75rem;
+    border-radius: var(--radius-pill);
+    background: var(--play-bg);
+    color: var(--text-on-brand);
+    box-shadow: var(--shadow-button);
+    transition: transform 200ms var(--ease-out);
+  }
+
+  .tv__poster-play :global(svg) {
+    width: 45%;
+    height: 45%;
+    transform: translateX(8%);
+  }
+
+  .tv__poster:hover .tv__poster-play,
+  .tv__poster:focus-visible .tv__poster-play {
+    transform: scale(1.08);
+  }
+
+  .tv__poster:focus-visible {
+    box-shadow: inset 0 0 0 4px var(--brand-gold);
+  }
+
+  [data-tv][data-ready] .tv__poster {
+    display: none;
+  }
+
+  [data-tv][data-loading] .tv__poster-play {
+    opacity: 0.6;
+  }
+
+  .tv__unmute {
+    position: absolute;
+    left: 50%;
+    bottom: 18%;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    min-height: 3rem;
+    padding: var(--space-sm) var(--space-lg);
+    border: 2px solid var(--text-on-brand);
+    border-radius: var(--radius-pill);
+    background: var(--brand-red);
+    color: var(--text-on-brand);
+    font-family: var(--font-body);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+    white-space: nowrap;
+    box-shadow: var(--shadow-button);
+    cursor: pointer;
+    transform: translateX(-50%);
+  }
+
+  .tv__unmute[hidden] {
+    display: none;
+  }
+
+  .tv__unmute :global(svg) {
+    width: 1.4em;
+    height: 1.4em;
+  }
+
+  .tv__unmute:hover {
+    background: var(--brand-red-hover);
+  }
+
+  .tv__unmute:focus-visible {
+    box-shadow: var(--focus-ring);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .tv__unmute {
+      animation: tv-nudge 2.4s var(--ease-out) infinite;
+    }
+
+    [data-tv][data-playing] .tv__dot {
+      animation: tv-blink 1.6s steps(2, jump-none) infinite;
+    }
+  }
+
+  @keyframes tv-nudge {
+    0%,
+    70%,
+    100% {
+      transform: translateX(-50%) scale(1);
+    }
+
+    80% {
+      transform: translateX(-50%) scale(1.06);
+    }
+  }
+
+  @keyframes tv-blink {
+    50% {
+      opacity: 0.2;
+    }
+  }
+
+  .tv__bar {
+    display: grid;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    border-top: var(--border-width) solid var(--border-subtle);
+    background: var(--pattern-scanlines), var(--bg-surface);
+  }
+
+  .tv__now {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    min-width: 0;
+  }
+
+  .tv__tag {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-2xs) var(--space-xs);
+    border-radius: var(--radius-sm);
+    background: var(--brand-red);
+    color: var(--text-on-brand);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+  }
+
+  .tv__dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: var(--radius-pill);
+    background: var(--text-on-brand);
+  }
+
+  .tv__now-title {
+    overflow: hidden;
+    font-weight: var(--font-weight-semibold);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .tv__controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
+  .tv__btn {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    border: var(--border-width) solid var(--border-strong);
+    border-radius: var(--radius-pill);
+    background: var(--bg-elevated);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition:
+      border-color 160ms var(--ease-out),
+      background-color 160ms var(--ease-out);
+  }
+
+  .tv__btn:hover {
+    border-color: var(--brand-gold);
+    background: var(--brand-gold-soft);
+  }
+
+  .tv__btn:focus-visible,
+  .tv__track:focus-visible {
+    box-shadow: var(--focus-ring);
+  }
+
+  .tv__btn :global(svg) {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .tv__btn--main {
+    width: 3.25rem;
+    height: 3.25rem;
+    border-color: transparent;
+    background: var(--brand-red);
+    color: var(--text-on-brand);
+    box-shadow: var(--shadow-button);
+  }
+
+  .tv__btn--main:hover {
+    border-color: transparent;
+    background: var(--brand-red-hover);
+  }
+
+  .tv__btn--main :global(svg) {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .tv__btn--main :global(.tv__icon-pause) {
+    stroke-width: 3;
+  }
+
+  .tv__btn :global(.tv__icon-pause),
+  .tv__btn :global(.tv__icon-sound),
+  [data-tv][data-playing] .tv__btn :global(.tv__icon-play),
+  [data-tv]:not([data-muted]) .tv__btn :global(.tv__icon-muted) {
+    display: none;
+  }
+
+  [data-tv][data-playing] .tv__btn :global(.tv__icon-pause),
+  [data-tv]:not([data-muted]) .tv__btn :global(.tv__icon-sound) {
+    display: block;
+  }
+
+  [data-tv-mute] {
+    margin-left: auto;
+  }
+
+  .tv__side {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: var(--space-sm);
+    min-height: 0;
+  }
+
+  .tv__list-head {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-sm);
+  }
+
+  .tv__count {
+    color: var(--text-secondary);
+  }
+
+  .tv__tracks {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: var(--space-2xs);
+    max-height: 24rem;
+    padding: var(--space-2xs);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border: var(--border-width) solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-surface);
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+  }
+
+  .tv__track {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    gap: var(--space-sm);
+    align-items: center;
+    width: 100%;
+    padding: var(--space-xs);
+    border: 0;
+    border-left: 3px solid transparent;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: var(--font-size-sm);
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .tv__track:hover {
+    background: var(--bg-elevated);
+  }
+
+  .tv__track[aria-current='true'] {
+    border-left-color: var(--brand-red);
+    background: var(--bg-elevated);
+  }
+
+  .tv__thumb {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    background: var(--bg-elevated);
+  }
+
+  .tv__track-text {
+    display: grid;
+    gap: var(--space-2xs);
+    min-width: 0;
+  }
+
+  .tv__track-title {
+    display: -webkit-box;
+    overflow: hidden;
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .tv__track-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-xs);
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+  }
+
+  .tv__track-num {
+    color: var(--brand-gold);
+  }
+
+  .tv__playing {
+    display: none;
+    color: var(--brand-red-bright);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .tv__track[aria-current='true'] .tv__playing {
+    display: inline;
+  }
+
+  .tv__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs) var(--space-lg);
+    padding-top: var(--space-xs);
+  }
+
+  @media (min-width: 40rem) {
+    .tv__bar {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: var(--space-md);
+    }
+
+    [data-tv-mute] {
+      margin-left: var(--space-xs);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .tv__console {
+      grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr);
+      gap: var(--space-xl);
+      align-items: stretch;
+    }
+
+    /* The player sets the row height; the tracklist scrolls inside it instead of stretching the row. */
+    .tv__side {
+      contain: size;
+    }
+
+    .tv__tracks {
+      max-height: none;
+    }
+  }
+</style>
+
+<script>
+  interface YTPlayer {
+    playVideo(): void;
+    pauseVideo(): void;
+    mute(): void;
+    unMute(): void;
+    isMuted(): boolean;
+    nextVideo(): void;
+    previousVideo(): void;
+    playVideoAt(index: number): void;
+    loadPlaylist(options: { list: string; listType: 'playlist'; index?: number }): void;
+    setLoop(loop: boolean): void;
+    getPlaylist(): string[] | null;
+    getVideoUrl(): string;
+    getPlayerState(): number;
+    getIframe(): HTMLIFrameElement;
+  }
+
+  interface YTNamespace {
+    Player: new (element: HTMLElement, options: object) => YTPlayer;
+  }
+
+  type YTWindow = Window & { YT?: YTNamespace; onYouTubeIframeAPIReady?: () => void };
+
+  const PLAYING = 1;
+  const BUFFERING = 3;
+
+  let api: Promise<YTNamespace> | undefined;
+
+  function loadApi(): Promise<YTNamespace> {
+    const w = window as YTWindow;
+    api ??= new Promise((resolve, reject) => {
+      if (w.YT?.Player) return resolve(w.YT);
+      const previous = w.onYouTubeIframeAPIReady;
+      w.onYouTubeIframeAPIReady = () => {
+        previous?.();
+        resolve(w.YT as YTNamespace);
+      };
+      const script = document.createElement('script');
+      script.src = 'https://www.youtube.com/iframe_api';
+      script.async = true;
+      script.onerror = () => reject(new Error('YouTube IFrame API failed to load'));
+      document.head.append(script);
+    });
+    return api;
+  }
+
+  function setup(root: HTMLElement) {
+    const playlistId = root.dataset.playlist ?? '';
+    const q = <T extends HTMLElement>(selector: string) => root.querySelector<T>(selector);
+    const screen = q('[data-tv-screen]')!;
+    const mount = q('[data-tv-mount]')!;
+    const toggle = q<HTMLButtonElement>('[data-tv-toggle]')!;
+    const muteBtn = q<HTMLButtonElement>('[data-tv-mute]')!;
+    const unmute = q<HTMLButtonElement>('[data-tv-unmute]')!;
+    const now = q('[data-tv-now]')!;
+    const list = q('[data-tv-list]');
+    const tracks = [...root.querySelectorAll<HTMLButtonElement>('[data-tv-track]')];
+
+    const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+    const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const autoplayAllowed = !calm && connection?.saveData !== true;
+
+    let player: YTPlayer | undefined;
+    let ready: Promise<YTPlayer> | undefined;
+    let inView = false;
+    let engaged = false;
+    let currentId = '';
+    let errors = 0;
+    let poll: number | undefined;
+
+    function ensurePlayer(): Promise<YTPlayer> {
+      ready ??= loadApi().then(
+        (YT) =>
+          new Promise<YTPlayer>((resolve) => {
+            root.toggleAttribute('data-loading', true);
+            const instance = new YT.Player(mount, {
+              host: 'https://www.youtube-nocookie.com',
+              width: '100%',
+              height: '100%',
+              playerVars: {
+                listType: 'playlist',
+                list: playlistId,
+                playsinline: 1,
+                rel: 0,
+                iv_load_policy: 3,
+                origin: location.origin,
+              },
+              events: {
+                onReady: () => {
+                  player = instance;
+                  instance.setLoop(true);
+                  pinTitle(instance.getIframe());
+                  root.toggleAttribute('data-loading', false);
+                  root.toggleAttribute('data-ready', true);
+                  resolve(instance);
+                },
+                onStateChange: sync,
+                // Skips uploads that can't be embedded, but leaves YouTube's own error screen up when
+                // nothing plays at all (e.g. YouTube is blocked on this network).
+                onError: () => {
+                  if (++errors <= 3) instance.nextVideo();
+                },
+              },
+            });
+          }),
+      );
+      return ready;
+    }
+
+    // YouTube puts its English default title back on the frame as each video loads.
+    function pinTitle(iframe: HTMLIFrameElement) {
+      const title = 'Sin Pauta TV: reproductor de videos de YouTube';
+      const apply = () => {
+        if (iframe.title !== title) iframe.title = title;
+      };
+      apply();
+      new MutationObserver(apply).observe(iframe, { attributeFilter: ['title'] });
+    }
+
+    function sync() {
+      if (!player) return;
+      const state = player.getPlayerState();
+      const playing = state === PLAYING || state === BUFFERING;
+      if (state === PLAYING) errors = 0;
+      const muted = player.isMuted();
+      root.toggleAttribute('data-playing', playing);
+      root.toggleAttribute('data-muted', muted);
+      toggle.setAttribute('aria-label', playing ? 'Pausar' : 'Reproducir');
+      muteBtn.setAttribute('aria-pressed', String(muted));
+      muteBtn.setAttribute('aria-label', muted ? 'Activar sonido' : 'Silenciar');
+      unmute.hidden = !(playing && muted);
+
+      if (playing && poll === undefined) poll = window.setInterval(sync, 1000);
+      if (!playing && poll !== undefined) {
+        clearInterval(poll);
+        poll = undefined;
+      }
+
+      const id = new URL(player.getVideoUrl(), location.href).searchParams.get('v') ?? '';
+      if (!id || id === currentId) return;
+      currentId = id;
+      let title = '';
+      for (const track of tracks) {
+        if (track.dataset.tvTrack !== id) {
+          track.removeAttribute('aria-current');
+          continue;
+        }
+        track.setAttribute('aria-current', 'true');
+        title = track.dataset.title ?? '';
+        list?.scrollTo({ top: track.offsetTop - list.clientHeight / 3, behavior: calm ? 'auto' : 'smooth' });
+      }
+      now.textContent = title || 'Sin Pauta TV';
+    }
+
+    async function act(command: (p: YTPlayer) => void) {
+      engaged = true;
+      const p = await ensurePlayer();
+      command(p);
+      sync();
+      window.setTimeout(sync, 400);
+    }
+
+    function autopilot() {
+      if (!player || engaged) return;
+      const playing = root.hasAttribute('data-playing');
+      if (inView && !playing) {
+        player.mute();
+        player.playVideo();
+      } else if (!inView && playing) {
+        player.pauseVideo();
+      }
+    }
+
+    q('[data-tv-poster]')!.addEventListener('click', () =>
+      act((p) => {
+        p.unMute();
+        p.playVideo();
+      }),
+    );
+    unmute.addEventListener('click', () =>
+      act((p) => {
+        p.unMute();
+        p.playVideo();
+      }),
+    );
+    toggle.addEventListener('click', () =>
+      act((p) => (root.hasAttribute('data-playing') ? p.pauseVideo() : p.playVideo())),
+    );
+    muteBtn.addEventListener('click', () => act((p) => (p.isMuted() ? p.unMute() : p.mute())));
+    q('[data-tv-prev]')!.addEventListener('click', () => act((p) => p.previousVideo()));
+    q('[data-tv-next]')!.addEventListener('click', () => act((p) => p.nextVideo()));
+
+    for (const track of tracks) {
+      track.addEventListener('click', () =>
+        act((p) => {
+          const id = track.dataset.tvTrack ?? '';
+          const index = p.getPlaylist()?.indexOf(id) ?? -1;
+          p.unMute();
+          if (index >= 0) p.playVideoAt(index);
+          else p.loadPlaylist({ list: playlistId, listType: 'playlist', index: Number(track.dataset.index) });
+        }),
+      );
+    }
+
+    if (!autoplayAllowed) return;
+
+    const near = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        near.disconnect();
+        ensurePlayer().then(autopilot, () => undefined);
+      },
+      { rootMargin: '0px 0px 200px 0px' },
+    );
+    near.observe(screen);
+
+    new IntersectionObserver(
+      ([entry]) => {
+        inView = entry.isIntersecting;
+        autopilot();
+      },
+      { threshold: 0.5 },
+    ).observe(screen);
+  }
+
+  const root = document.querySelector<HTMLElement>('[data-tv]');
+  if (root) setup(root);
+</script>

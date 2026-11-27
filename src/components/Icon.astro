@@ -6,6 +6,8 @@ interface Props {
 
 const FILLED = {
   play: '<path d="M8 5.2v13.6L19 12 8 5.2Z"/>',
+  prev: '<path d="M6 5h2.2v14H6zM19 5.2v13.6L9.5 12 19 5.2Z"/>',
+  next: '<path d="M15.8 5H18v14h-2.2zM5 5.2v13.6L14.5 12 5 5.2Z"/>',
   youtube:
     '<path d="M23 7.2a3 3 0 0 0-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 0 0 1 7.2 31 31 0 0 0 .5 12a31 31 0 0 0 .5 4.8 3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .5-4.8 31 31 0 0 0-.5-4.8ZM9.8 15.1V8.9l5.7 3.1-5.7 3.1Z"/>',
   phone:
@@ -29,6 +31,8 @@ const STROKED = {
   bell: '<path d="M6 9a6 6 0 1 1 12 0c0 6.5 2.5 8.5 2.5 8.5h-17S6 15.5 6 9Z"/><path d="M10.2 20.5a2 2 0 0 0 3.6 0"/>',
   calendar: '<rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
   pause: '<path d="M9 6v12M15 6v12"/>',
+  'volume-off': '<path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5H4ZM16 9.5l5 5M21 9.5l-5 5"/>',
+  'volume-on': '<path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5H4ZM15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/>',
 } as const;
 
 const { name, class: className } = Astro.props;

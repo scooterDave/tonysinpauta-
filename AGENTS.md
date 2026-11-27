@@ -15,6 +15,7 @@ This file is a table of contents, not an encyclopedia. Follow the links for deta
 - `src/styles/tokens.css` — single source of truth for colour, type, spacing, radii, shadows.
 - `src/data/site.ts` — channel facts, stats, phone/WhatsApp, nav, artist names. `src/data/featured.ts` — curated interviews and show clips.
 - `src/lib/youtube-feed.ts` + `src/lib/videos.ts` — build-time channel feed with fallback to `src/data/videos-fallback.json`.
+- Sin Pauta TV player (`src/components/home/SinPautaTV.astro`): playlist ID is `SIN_PAUTA_TV_PLAYLIST_ID` in `src/data/site.ts`; tracklist from `src/lib/playlist.ts` with fallback `src/data/playlist-fallback.json`.
 - `src/components/` — shared UI (`LiteYouTube`, `VideoCard`, `Header`, `Footer`, …); `src/components/home/` — page sections.
 - `scripts/` — `refresh-videos.ts` (update the fallback snapshot), `prepare-media.mjs` (rebuild brand media from `assets-src/`).
 - `.github/workflows/deploy.yml` — verify, build and deploy to GitHub Pages on push to `main`, daily, or manually.
@@ -39,6 +40,7 @@ This file is a table of contents, not an encyclopedia. Follow the links for deta
 - `npm run build` — static build to `dist/`. `npm run preview` — serve `dist/`.
 - `npm run verify:fast` — `astro check` + Stylelint token lint + build (Tier 1).
 - `npm run videos:refresh` — refresh `src/data/videos-fallback.json` from the live feed, then commit it.
+- `npm run playlist:refresh` — refresh `src/data/playlist-fallback.json` (Sin Pauta TV tracklist); run it after changing the playlist ID, then commit it.
 - `npm run media:prepare` — regenerate `src/assets/**` and `public/og-image.jpg` from `assets-src/`.
 - Env: `SITE_URL` (absolute URL with trailing slash), `YOUTUBE_FEED=off` (offline build from the snapshot).
 - Planned: `verify:all` (Playwright + axe + Lighthouse, ledger `T2-03`).

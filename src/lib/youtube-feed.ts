@@ -14,8 +14,18 @@ export interface ChannelVideo {
 export const WIDE_ASPECT = 16 / 9;
 const VERTICAL_ASPECT = 9 / 16;
 
+export interface PlaylistTrack {
+  id: string;
+  title: string;
+  published: string;
+  isShort: boolean;
+}
+
 export const feedUrl = (channelId: string) =>
   `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
+
+export const playlistFeedUrl = (playlistId: string) =>
+  `https://www.youtube.com/feeds/videos.xml?playlist_id=${playlistId}`;
 
 const ENTITIES: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" };
 
@@ -87,17 +97,28 @@ export async function detectAspect(id: string, timeoutMs = 6000): Promise<number
   return Math.max(0.5, Math.round(aspect * 1000) / 1000);
 }
 
-export async function fetchChannelVideos(
-  channelId: string,
-  { timeoutMs = 10000, knownAspects = new Map<string, number>() } = {},
-): Promise<ChannelVideo[]> {
-  const res = await fetch(feedUrl(channelId), {
+async function fetchFeed(url: string, timeoutMs: number) {
+  const res = await fetch(url, {
     signal: AbortSignal.timeout(timeoutMs),
     headers: { 'user-agent': 'tonysinpauta.com static build' },
   });
   if (!res.ok) throw new Error(`YouTube feed: HTTP ${res.status}`);
   const entries = parseFeed(await res.text());
   if (entries.length === 0) throw new Error('YouTube feed: no entries');
+  return entries;
+}
+
+/** The public playlist feed lists the first 15 items; the player itself plays the whole playlist. */
+export async function fetchPlaylistTracks(playlistId: string, { timeoutMs = 10000 } = {}): Promise<PlaylistTrack[]> {
+  const entries = await fetchFeed(playlistFeedUrl(playlistId), timeoutMs);
+  return entries.map(({ id, title, published, isShort }) => ({ id, title, published, isShort }));
+}
+
+export async function fetchChannelVideos(
+  channelId: string,
+  { timeoutMs = 10000, knownAspects = new Map<string, number>() } = {},
+): Promise<ChannelVideo[]> {
+  const entries = await fetchFeed(feedUrl(channelId), timeoutMs);
 
   return Promise.all(
     entries.map(async (entry) => {
