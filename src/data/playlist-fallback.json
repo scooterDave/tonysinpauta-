@@ -1,7 +1,13 @@
 {
   "playlistId": "PLDrx9JTRMM-A",
-  "fetchedAt": "2026-11-27T21:15:45.476Z",
+  "fetchedAt": "2026-11-27T22:13:59.265Z",
   "tracks": [
+    {
+      "id": "RGjwJymPj50",
+      "title": "Juan Ariel - Yo Soy Tu Marca (Video Oficial)",
+      "published": "2026-07-10T22:00:06+00:00",
+      "isShort": false
+    },
     {
       "id": "0Sk4hF6w3Y0",
       "title": "LUIS JAVIER - EN ESTA NAVIDAD / VIDEO OFICIAL",
@@ -9,9 +15,9 @@
       "isShort": false
     },
     {
-      "id": "RGjwJymPj50",
-      "title": "Juan Ariel - Yo Soy Tu Marca (Video Oficial)",
-      "published": "2026-07-10T22:00:06+00:00",
+      "id": "qeGRoEC4EWg",
+      "title": "Mi Mujer Me Lo Pegó - L Manuel (Video Oficial)",
+      "published": "2026-04-25T01:57:10+00:00",
       "isShort": false
     }
   ]
